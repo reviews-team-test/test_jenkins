@@ -22,7 +22,7 @@ jobs:
       - name: Check Specical Word
         run: |
           pip3 install PyGithub
-          python3 $GITHUB_WORKSPACE/.github/script/debian-special-word-check.py --project ${GITHUB_REPOSITORY} --token $GITHUB_ACCESS_TOKEN --sha ${GITHUB_SHA} --keys ${FILTER_KEYS}
+          python3 $GITHUB_WORKSPACE/.github/script/debian-special-word-check.py --project $GITHUB_REPOSITORY --token $GITHUB_ACCESS_TOKEN --sha $GITHUB_SHA --keys ${FILTER_KEYS}
         env:
           GITHUB_ACCESS_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GITHUB_REPOSITORY: ${{ github.repository }}
