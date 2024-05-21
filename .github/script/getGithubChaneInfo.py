@@ -18,10 +18,10 @@ def get_change_info(access_token, project_name, sha, logFile):
             filePatch = file_diff.patch
             fileContent = filePatch.splitlines()
             for line in fileContent:
-                if line.startswith("-      "):
-                    originInfo[file_diff.filename]["a"].append(line.lstrip("-      "))
-                elif line.startswith("+      "):
-                    originInfo[file_diff.filename]["b"].append(line.lstrip("+      "))
+                if line.startswith("-"):
+                    originInfo[file_diff.filename]["a"].append(line.lstrip("-"))
+                elif line.startswith("+"):
+                    originInfo[file_diff.filename]["b"].append(line.lstrip("+"))
            
         with open(logFile, "w") as fout:
             if isinstance(originInfo, dict):
