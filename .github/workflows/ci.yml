@@ -13,29 +13,16 @@ jobs:
         with:
           fetch-depth: '2'
       - name: Check File Prefix
-        run: |
-          pwd
-          ls
-          prefix="debian/"
-          NoNeedDebianFiles="debian/changelog, debian/copyright, debian/compat, debian/source/format"
-          changeFile=$(git diff-tree --no-commit-id --name-only -r HEAD)
-          echo "changeFile is $changeFile"
-          num=0
-          for file in $(git diff-tree --no-commit-id --name-only -r HEAD); do
-            if [[ $file =~ ^$prefix ]]; then
-              if echo "$NoNeedDebianFiles" | grep -q "$file"; then
-                continue
-              else
-                num=$((num+1))
-              fi
-            fi
-          done
-          if [ $num -eq 0 ]; then
-            echo "No files need to be prefixed with 'debian/'"
-            exit 0
-          else
-            echo "Please prefix the following files with 'debian/'"
-            echo "$changeFile"
-            exit 1
-          fi
+        run: $GITHUB_WORKSPACE/.github/script/debian-prefix-check.sh
         shell: bash
+      - name: Check Debian Version
+        run: $GITHUB_WORKSPACE/.github/script/debian-version-check.sh
+        shell: bash
+
+      - name: Check Specical Word
+        run: python3 $GITHUB_WORKSPACE/.github/script/debian-special-word-check.py --project ${GITHUB_REPOSITORY} --token $GITHUB_ACCESS_TOKEN --sha ${GITHUB_SHA} --keys ${FILTER_KEYS}
+        env:
+          GITHUB_ACCESS_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
+          GITHUB_SHA: ${{ github.sha }}
+          FILTER_KEYS: "getcap,setcap,lshw,dmidecode"
