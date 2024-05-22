@@ -25,7 +25,7 @@ for file in $(git diff-tree --no-commit-id --name-only -r HEAD); do
     fi
     break
   fi
-  if [[ isCheck == false ]]; then
+  if [[ $isCheck == false ]]; then
     echo "[PASS]: 无需版本检查"
   fi
 done
