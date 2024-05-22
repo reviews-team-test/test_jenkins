@@ -23,8 +23,10 @@ def getFilterInfo(keyLst, shaDict):
   #     if isinstance(filterInfo, dict):
   #         fout.write(json.dumps(filterInfo, indent=4, ensure_ascii=False))
   if filterInfo:
-    print(f"[ERR]: 存在敏感词{list(filterInfo.keys())}")
+    print(f"[FAIL]: 存在敏感词{list(filterInfo.keys())}")
     exit(1)
+  else:
+    print("[PASS]: 敏感词检查通过")
   
 if __name__ == '__main__':
     import argparse
