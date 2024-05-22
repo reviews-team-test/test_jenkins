@@ -26,6 +26,7 @@ jobs:
           GITHUB_SHA: ${{ github.sha }}
           FILTER_KEYS: "getcap,setcap,lshw,dmidecode"
       - name: Upload Data to MDY
+        if: ${{ always() }}
         uses: distributhor/workflow-webhook@v1
         with:
           webhook_type: 'json-extended'

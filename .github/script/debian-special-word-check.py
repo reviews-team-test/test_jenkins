@@ -23,6 +23,7 @@ def getFilterInfo(keyLst, shaDict):
   #     if isinstance(filterInfo, dict):
   #         fout.write(json.dumps(filterInfo, indent=4, ensure_ascii=False))
   if filterInfo:
+    print(f"[ERR]: 存在敏感词{list(filterInfo.keys())}")
     exit(1)
   
 if __name__ == '__main__':
@@ -45,5 +46,5 @@ try:
   shaDict = readJsonFile("changeInfo.json")
   getFilterInfo(keyLst, shaDict)
 except Exception as e:
-  print(e)
+  print(f"[ERR]: 异常报错-{e}")
   exit(1)
