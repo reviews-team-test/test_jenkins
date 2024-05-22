@@ -1,11 +1,9 @@
 name: debiancheck
-on:
-  push:
-    branches:
-      - main
-      
+on: [push, pull_request]
+
+
 jobs:
-  debian-prefix-check:
+  debian-check:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Code
@@ -18,7 +16,6 @@ jobs:
       - name: Check Debian Version
         run: $GITHUB_WORKSPACE/.github/script/debian-version-check.sh
         shell: bash
-
       - name: Check Specical Word
         run: |
           pip3 install PyGithub
@@ -28,3 +25,11 @@ jobs:
           GITHUB_REPOSITORY: ${{ github.repository }}
           GITHUB_SHA: ${{ github.sha }}
           FILTER_KEYS: "getcap,setcap,lshw,dmidecode"
+      - name: Upload Data to MDY
+        if: ${{ always() }}
+        uses: distributhor/workflow-webhook@v1
+        with:
+          webhook_type: 'json-extended'
+          webhook_url: ${{ secrets.MDY_WEBHOOK_URL }}
+          webhook_secret: ${{ secrets.MDY_WEBHOOK_SECRET }}
+          data: '{ "name": "hello", "value" : "world" }'

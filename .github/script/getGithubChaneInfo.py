@@ -27,9 +27,9 @@ def get_change_info(access_token, project_name, sha, logFile):
             if isinstance(originInfo, dict):
                 fout.write(json.dumps(originInfo, indent=4, ensure_ascii=False))
     except github.GithubException as e:
-        print(f"Githun Api [ERR]: {e}")  
+        print(f"[ERR]: 异常报错-Githun Api-{e}")
     except Exception as e:
-        print(f"[ERR]: {e}")
+        print(f"[ERR]: 异常报错-{e}")
     
 
 if __name__ == '__main__':
