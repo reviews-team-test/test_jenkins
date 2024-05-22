@@ -1,7 +1,9 @@
 #!/bin/bash
 
+isCheck=false
 for file in $(git diff-tree --no-commit-id --name-only -r HEAD); do
   if [[ $file == 'debian/changelog' ]]; then
+    isCheck=true
     version_str=$(dpkg-parsechangelog -l debian/changelog -n 2 | awk -F'[()]' '{print $2}'|grep -v '^$\|^Task\|^Bug\|^Influence'|awk -F'-' '{print $1}'|tr '\n' ' ')
     IFS=' ' read -r -a version_arr <<< "$version_str"
     if [[ ${#version_arr[*]} == 2 ]]; then
@@ -22,7 +24,8 @@ for file in $(git diff-tree --no-commit-id --name-only -r HEAD); do
       fi
     fi
     break
-  else
-    echo "无版本检查"
+  fi
+  if [[ isCheck == false ]]; then
+    echo "[PASS]: 无需版本检查"
   fi
 done
