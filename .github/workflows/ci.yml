@@ -1,4 +1,4 @@
-name: debiancheck
+name: debianCheck
 on: [push, pull_request]
 
 
