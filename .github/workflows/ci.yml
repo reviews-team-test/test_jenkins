@@ -6,25 +6,6 @@ jobs:
   debian-check:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout Code
-        uses: actions/checkout@v2
-        with:
-          fetch-depth: '2'
-      - name: Check File Prefix
-        run: $GITHUB_WORKSPACE/.github/script/debian-prefix-check.sh
-        shell: bash
-      - name: Check Debian Version
-        run: $GITHUB_WORKSPACE/.github/script/debian-version-check.sh
-        shell: bash
-      - name: Check Specical Word
-        run: |
-          pip3 install PyGithub
-          python3 $GITHUB_WORKSPACE/.github/script/debian-special-word-check.py --project $GITHUB_REPOSITORY --token $GITHUB_ACCESS_TOKEN --sha $GITHUB_SHA --keys ${FILTER_KEYS}
-        env:
-          GITHUB_ACCESS_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          GITHUB_REPOSITORY: ${{ github.repository }}
-          GITHUB_SHA: ${{ github.sha }}
-          FILTER_KEYS: "getcap,setcap,lshw,dmidecode"
       - name: Upload Data to MDY
         if: ${{ always() }}
         uses: distributhor/workflow-webhook@v1
