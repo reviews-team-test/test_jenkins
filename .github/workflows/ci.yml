@@ -6,6 +6,36 @@ jobs:
   debian-check:
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout Code
+        id: checkout
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: '2'
+      - name: Check File Prefix
+        id: check-file-prefix
+        if: steps.checkout.outcome == 'success'
+        run: |
+          $GITHUB_WORKSPACE/.github/script/debian-prefix-check.sh
+          echo ::set-output name=exit_status::$?
+        shell: bash:
+      - name: Check Debian Version
+        id: check-debian-version
+        if: steps.checkout.outcome == 'success'
+        run: |
+          $GITHUB_WORKSPACE/.github/script/debian-version-check.sh
+          echo ::set-output name=exit_status::$?
+      - name: Check Specical Words
+        id: check-specical-words
+        if: steps.checkout.outcome == 'success'
+        run: |
+          pip3 install PyGithub
+          python3 $GITHUB_WORKSPACE/.github/script/debian-special-word-check.py --project $GITHUB_REPOSITORY --token $GITHUB_ACCESS_TOKEN --sha $GITHUB_SHA --keys ${FILTER_KEYS}
+          echo ::set-output name=exit_status::$?
+        env:
+          GITHUB_ACCESS_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
+          GITHUB_SHA: ${{ github.sha }}
+          FILTER_KEYS: "getcap,setcap,lshw,dmidecode"
       - name: Upload Data to MDY
         if: ${{ always() }}
         uses: distributhor/workflow-webhook@v1
@@ -13,4 +43,8 @@ jobs:
           webhook_type: 'json-extended'
           webhook_url: 'https://cooperation.uniontech.com/api/workflow/hooks/NjY0ZDkzNTFiNTRhZGQ0Mzg1N2Q1MWZh'
           webhook_secret: '8l1O6E0M6Q4sad1O7m3k1RdV9gda3Kea14aK6396a308a1938e7Bfxb3bB5zbD0c'
-          data: '{ "name": "hello", "value" : "world" }'
+          data: 
+            '{
+              "run_id": "${{ github.run_id }}",
+              "result": "${{steps.check-file-prefix.outputs.exit_status}}, ${{steps.check-debian-version.outputs.exit_status}}, ${{steps.check-specical-words.outputs.exit_status}}"
+            }'
