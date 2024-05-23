@@ -17,19 +17,20 @@ jobs:
         run: |
           $GITHUB_WORKSPACE/.github/script/debian-prefix-check.sh
           echo ::set-output name=exit_status::$?
+          echo "exit_status=$?" >> $GITHUB_OUTPUT
       - name: Check Debian Version
         id: check-debian-version
         if: steps.checkout.outcome == 'success'
         run: |
           $GITHUB_WORKSPACE/.github/script/debian-version-check.sh
-          echo ::set-output name=exit_status::$?
+          echo "exit_status=$?" >> $GITHUB_OUTPUT
       - name: Check Specical Words
         id: check-specical-words
         if: steps.checkout.outcome == 'success'
         run: |
           pip3 install PyGithub
           python3 $GITHUB_WORKSPACE/.github/script/debian-special-word-check.py --project $GITHUB_REPOSITORY --token $GITHUB_ACCESS_TOKEN --sha $GITHUB_SHA --keys ${FILTER_KEYS}
-          echo ::set-output name=exit_status::$?
+          echo "exit_status=$?" >> $GITHUB_OUTPUT
         env:
           GITHUB_ACCESS_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GITHUB_REPOSITORY: ${{ github.repository }}
