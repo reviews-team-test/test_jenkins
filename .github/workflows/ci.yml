@@ -46,5 +46,5 @@ jobs:
           data: 
             '{
               "run_id": "${{ github.run_id }}",
-              "result": "${{steps.check-file-prefix.outputs.exit_status}}, ${{steps.check-debian-version.outputs.exit_status}}, ${{steps.check-specical-words.outputs.exit_status}}"
+              "result": "${{steps.check-file-prefix.outputs.exit_status}}-${{steps.check-debian-version.outputs.exit_status}}-${{steps.check-specical-words.outputs.exit_status}}"
             }'
