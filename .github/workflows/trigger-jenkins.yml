@@ -7,7 +7,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - id: triggerjenkinsjob
-        uses: mickeygoussetorg/trigger-jenkins-job@v1
+        uses: gautham71298/trigger-jenkins-job@main
         with:
           jenkins-server:  "${{ secrets.JENKINS_URL }}" # URL of the jenkins server. ex: http://myjenkins.acme.com:8080
           jenkins-job: "1060/job/iso-scan-test/job/uos-cd-dconfig/" # The name of the jenkins job to run
