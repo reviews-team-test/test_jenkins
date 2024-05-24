@@ -8,9 +8,10 @@ jobs:
         - name: Trigger jenkins job
           uses: jabbukka/jenkins-trigger@main
           with:
-            url: ${{ secrets.JENKINS_URL_CHECK_TEST }}
-            job_name: "uos-cd-dconfig"
+            url: ${{ secrets.JENKINS_URL }}
+            job_name: "1060/job/iso-scan-test/job/uos-cd-dconfig/"
             user_name: ${{ secrets.JENKINS_USERNAME }}
             api_token: ${{ secrets.JENKINS_PAT }}
+            parameter: '{"note":"test_jenkins"}'
             wait: "true"
             timeout: "1000"
