@@ -13,7 +13,7 @@ jobs:
           jenkins-job: "1060/job/iso-scan-test/job/uos-cd-dconfig/" # The name of the jenkins job to run
           jenkins-username: ${{ secrets.JENKINS_USERNAME }} # user name for accessing jenkins
           jenkins-pat: ${{ secrets.JENKINS_PAT }} # personal Access token for accessing Jenkins
-          jenkins-param: ""
+          jenkins-param: "name=3333333333"
           poll-time: 10 # how often (seconds) to poll the jenkins server for results
           timeout-value: 600 # How long (seconds) to poll before timing out the action
           verbose: true # true/false - turns on extra logging
