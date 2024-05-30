@@ -43,8 +43,10 @@ def get_pulls_files(repo, pull_number, token):
     url = f'https://api.github.com/repos/{repo}/pulls/{pull_number}/files'
     print(f'url is {url}')
     response = requests.get(url, headers=getHeaders(token))
-    print(f'response.json() is {response.json()}')
-    return response.json()
+    if response.status_code == 200:
+        return response.json()
+    else:
+        print(response.json())
 
 # 写json文件
 def writeJson(originInfo, infoType=dict):
@@ -88,7 +90,6 @@ def get_change_files(repo, pull_number, token):
         originInfo = {}
         originInfoStr = ''
         pfInfo = get_pulls_files(repo, pull_number, token)
-        print(f'pfInfo is {pfInfo}')
         for fileTemp in pfInfo:
             originInfo[fileTemp['filename']] = fileTemp['status']
             originInfoStr += fileTemp['filename'] + ':' + fileTemp['status'] + '\n'
