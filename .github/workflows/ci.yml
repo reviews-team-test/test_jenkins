@@ -1,5 +1,10 @@
-name: debiancheck
-on: [push, pull_request]
+name: debianCheck
+on: [push, pull_request_target]
+  # - pull_request_target:
+  #   branches:
+  #     - develop/snipe
+  #   paths-ignore:
+  #     - ".github/workflows/**"
 
 
 jobs:
@@ -7,29 +12,38 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Code
+        id: checkout
         uses: actions/checkout@v2
         with:
           fetch-depth: '2'
-      - name: Check File Prefix
-        run: $GITHUB_WORKSPACE/.github/script/debian-prefix-check.sh
-        shell: bash
-      - name: Check Debian Version
-        run: $GITHUB_WORKSPACE/.github/script/debian-version-check.sh
-        shell: bash
-      - name: Check Specical Word
+      - name: Check Debian Prefix
+        id: check-debian-prefix
+        if: steps.checkout.outcome == 'success'
         run: |
-          pip3 install PyGithub
-          python3 $GITHUB_WORKSPACE/.github/script/debian-special-word-check.py --project $GITHUB_REPOSITORY --token $GITHUB_ACCESS_TOKEN --sha $GITHUB_SHA --keys ${FILTER_KEYS}
+          python3 $GITHUB_WORKSPACE/.github/script/debian-check.py --type pre-check --repo $GITHUB_REPOSITORY --pr $GITHUB_PR_NUMBER
         env:
           GITHUB_ACCESS_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GITHUB_REPOSITORY: ${{ github.repository }}
-          GITHUB_SHA: ${{ github.sha }}
+          GITHUB_PR_NUMBER: ${{ github.event.pull_request.number }}
+      - name: Check Specical Words
+        id: check-specical-words
+        if: steps.checkout.outcome == 'success' && always()
+        run: |
+          python3 $GITHUB_WORKSPACE/.github/script/debian-check.py --type keys-check --repo $GITHUB_REPOSITORY --PRN $GITHUB_PR_NUMBER --keys $FILTER_KEYS --exclude $EXCLUDE_FILES
+        env:
+          GITHUB_ACCESS_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
+          GITHUB_PR_NUMBER: ${{ github.event.pull_request.number }}
           FILTER_KEYS: "getcap,setcap,lshw,dmidecode"
-      - name: Upload Data to MDY
-        if: ${{ always() }}
-        uses: distributhor/workflow-webhook@v1
-        with:
-          webhook_type: 'json-extended'
-          webhook_url: ${{ secrets.MDY_WEBHOOK_URL }}
-          webhook_secret: ${{ secrets.MDY_WEBHOOK_SECRET }}
-          data: '{ "name": "hello", "value" : "world" }'
+          EXCLUDE_FILES: 'js, vue, ts, less, html, go, css, json, txt, doc, jpg, png, svg, py, yml, md'
+      - name: Check Env Set Words
+        id: check-env-set-words
+        if: steps.checkout.outcome == 'success' && always()
+        run: |
+          python3 $GITHUB_WORKSPACE/.github/script/debian-check.py --type keys-check --repo $GITHUB_REPOSITORY --PRN $GITHUB_PR_NUMBER --keys $FILTER_KEYS --exclude $EXCLUDE_FILES
+        env:
+          GITHUB_ACCESS_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
+          GITHUB_PR_NUMBER: ${{ github.event.pull_request.number }}
+          FILTER_KEYS: "export, unset"
+          EXCLUDE_FILES: 'js, vue, ts, less, html, go, css, json, txt, doc, jpg, png, svg, py, yml, md'
