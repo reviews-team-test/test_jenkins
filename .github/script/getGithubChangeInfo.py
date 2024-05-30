@@ -43,6 +43,7 @@ def get_pulls_files(repo, pull_number):
     url = f'https://api.github.com/repos/{repo}/pulls/{pull_number}/files'
     print(f'url is {url}')
     response = requests.get(url, headers=headers)
+    print(f'response.json() is {response.json()}')
     return response.json()
 
 # 写json文件
@@ -87,6 +88,7 @@ def get_change_files(repo, pull_number):
         originInfo = {}
         originInfoStr = ''
         pfInfo = get_pulls_files(repo, pull_number)
+        print(f'pfInfo is {pfInfo}')
         for fileTemp in pfInfo:
             originInfo[fileTemp['filename']] = fileTemp['status']
             originInfoStr += fileTemp['filename'] + ':' + fileTemp['status'] + '\n'
