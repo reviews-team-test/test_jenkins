@@ -12,7 +12,6 @@ def getHeaders(access_token):
         "X-GitHub-Api-Version": "2022-11-28",
         "Accept": "application/vnd.github+json" 
     }
-    print(f"headers is {headers}")
     return headers
 # 获取两次提交之间的差异
 def get_commit_diff(repo, commit_sha1, commit_sha2, token):
@@ -41,7 +40,7 @@ def get_pull_commit_info(repo, pull_number, token):
 
 def get_pulls_files(repo, pull_number, token):
     url = f'https://api.github.com/repos/{repo}/pulls/{pull_number}/files'
-    print(f'url is {url}')
+    print(f'apiurl is {url}')
     response = requests.get(url, headers=getHeaders(token))
     if response.status_code == 200:
         return response.json()
@@ -117,8 +116,8 @@ def get_filterkey_info(content, keyLst, excludeSuffLst):
                             if fileName not in list(strJson[keyStr].keys()):
                                 strJson[keyStr][fileName] = {}
                             if actionType not in list(strJson[keyStr][fileName].keys()):
-                                strJson[keyStr][fileName][actionType] = {}
-                            strJson[keyStr][fileName].append(lineContent)
+                                strJson[keyStr][fileName][actionType] = []
+                            strJson[keyStr][fileName][actionType].append(lineContent)
         else:
                         for lineContent in patchContent['b']:
                             for keyStr in keyLst:
@@ -141,31 +140,31 @@ def filter_keywords(repo, pull_number, token, keyLst, excludeSuffLst):
     
     return originInfo
 
-if __name__ == '__main__':
-    import argparse
-    parser = argparse.ArgumentParser()
-    parser.add_argument("--type", required=True, help="检查类型")
-    # parser.add_argument("--owner", required=True, help="拥有者")
-    parser.add_argument("--repo", required=True, help="所有者和存储库名称。 例如，octocat/Hello-World")
-    parser.add_argument("--SHA", required=False, help="commit sha")
-    parser.add_argument("--PRN", required=False, help="pr number")
-    parser.add_argument("--log", required=False, help="输出日志文件名")
-    parser.add_argument("--keys", required=False, help="要筛选的敏感词,多个使用逗号分隔")
-    parser.add_argument("--exclude", required=False, help="不进行敏感词筛选的文件后缀")
+# if __name__ == '__main__':
+#     import argparse
+#     parser = argparse.ArgumentParser()
+#     parser.add_argument("--type", required=True, help="检查类型")
+#     # parser.add_argument("--owner", required=True, help="拥有者")
+#     parser.add_argument("--repo", required=True, help="所有者和存储库名称。 例如，octocat/Hello-World")
+#     parser.add_argument("--SHA", required=False, help="commit sha")
+#     parser.add_argument("--PRN", required=False, help="pr number")
+#     parser.add_argument("--log", required=False, help="输出日志文件名")
+#     parser.add_argument("--keys", required=False, help="要筛选的敏感词,多个使用逗号分隔")
+#     parser.add_argument("--exclude", required=False, help="不进行敏感词筛选的文件后缀")
     
-    args = parser.parse_args()
+#     args = parser.parse_args()
 
-    if args.log:
-        logFile = args.log
-    if args.PRN:
-        pull_number = args.PRN
+#     if args.log:
+#         logFile = args.log
+#     if args.PRN:
+#         pull_number = args.PRN
         
-    if args.type == 'get_change_files':
-        get_change_files(args.repo, pull_number)
-    if args.type == 'get_pr_files':
-        get_pr_files(args.repo, pull_number)
-    if args.type == 'filter_keys':
-        keyLst = args.keys.split(',')
-        if args.exclude:
-            excludeSuffLst = args.exclude.split(',')
-        filter_keywords(args.repo, pull_number, keyLst, excludeSuffLst)
+#     if args.type == 'get_change_files':
+#         get_change_files(args.repo, pull_number)
+#     if args.type == 'get_pr_files':
+#         get_pr_files(args.repo, pull_number)
+#     if args.type == 'filter_keys':
+#         keyLst = args.keys.split(',')
+#         if args.exclude:
+#             excludeSuffLst = args.exclude.split(',')
+#         filter_keywords(args.repo, pull_number, keyLst, excludeSuffLst)

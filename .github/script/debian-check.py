@@ -23,8 +23,9 @@ def debianPreCheck(repo, pull_number, token):
 def debianKeyWordsCheck(repo, pr, token, keyLst, excludeSuffLst):
   try:
     resulyJson = getGithubChangeInfo.filter_keywords(repo, pr, token, keyLst, excludeSuffLst)
+    showStr = '环境设置' if 'export' in keyLst else ''
     if resulyJson:
-        print(f"[FAIL]: 敏感词检查不通过{list(resulyJson.keys())}")
+        print(f"[FAIL]: {showStr}敏感词检查不通过{list(resulyJson.keys())}")
         exit(1)
     else:
       print("[PASS]: 敏感词检查通过")
