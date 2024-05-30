@@ -8,7 +8,7 @@ excludeSuffLst = []
 def getHeaders(access_token):
     # 设置头信息，包括使用access token进行认证
     headers = {
-        "Authorization": f"token {access_token}",
+        "Authorization": f"Bearer {access_token}",
         "X-GitHub-Api-Version": "2022-11-28",
         "Accept": "application/vnd.github+json" 
     }
