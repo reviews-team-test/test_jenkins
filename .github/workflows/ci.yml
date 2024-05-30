@@ -33,7 +33,7 @@ jobs:
         id: check-specical-words
         if: steps.checkout.outcome == 'success' && always()
         run: |
-          python3 $GITHUB_WORKSPACE/.github/script/debian-check.py --type keys-check --repo $GITHUB_REPOSITORY --PRN $PULL_NUMBER --keys $FILTER_KEYS --exclude $EXCLUDE_FILES
+          python3 $GITHUB_WORKSPACE/.github/script/debian-check.py --type keys-check --repo $GITHUB_REPOSITORY --pr $PULL_NUMBER --keys $FILTER_KEYS --exclude $EXCLUDE_FILES
         env:
           FILTER_KEYS: "getcap,setcap,lshw,dmidecode"
           EXCLUDE_FILES: 'js, vue, ts, less, html, go, css, json, txt, doc, jpg, png, svg, py, yml, md'
@@ -41,7 +41,7 @@ jobs:
         id: check-env-set-words
         if: steps.checkout.outcome == 'success' && always()
         run: |
-          python3 $GITHUB_WORKSPACE/.github/script/debian-check.py --type keys-check --repo $GITHUB_REPOSITORY --PRN $PULL_NUMBER --keys $FILTER_KEYS --exclude $EXCLUDE_FILES
+          python3 $GITHUB_WORKSPACE/.github/script/debian-check.py --type keys-check --repo $GITHUB_REPOSITORY --pr $PULL_NUMBER --keys $FILTER_KEYS --exclude $EXCLUDE_FILES
         env:
           FILTER_KEYS: "export, unset"
           EXCLUDE_FILES: 'js, vue, ts, less, html, go, css, json, txt, doc, jpg, png, svg, py, yml, md'

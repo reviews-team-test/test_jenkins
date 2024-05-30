@@ -41,6 +41,7 @@ def get_pull_commit_info(repo, pull_number):
 
 def get_pulls_files(repo, pull_number):
     url = f'https://api.github.com/repos/{repo}/pulls/{pull_number}/files'
+    print(f'url is {url}')
     response = requests.get(url, headers=headers)
     return response.json()
 
