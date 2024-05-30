@@ -2,47 +2,47 @@ import requests
 import os
 import json
 
-
-access_token = os.getenv('GITHUB_ACCESS_TOKEN')
-
-# 设置头信息，包括使用access token进行认证
-headers = {
-    "Authorization": f"token {access_token}",
-    "X-GitHub-Api-Version": "2022-11-28",
-    "Accept": "application/vnd.github+json" 
-}
-print(f"headers is {headers}")
 logFile = 'githubResult.json'
 excludeSuffLst = []
+
+def getHeaders(access_token):
+    # 设置头信息，包括使用access token进行认证
+    headers = {
+        "Authorization": f"token {access_token}",
+        "X-GitHub-Api-Version": "2022-11-28",
+        "Accept": "application/vnd.github+json" 
+    }
+    print(f"headers is {headers}")
+    return headers
 # 获取两次提交之间的差异
-def get_commit_diff(repo, commit_sha1, commit_sha2):
+def get_commit_diff(repo, commit_sha1, commit_sha2, token):
     url = f'https://api.github.com/repos/{repo}/compare/{commit_sha1}...{commit_sha2}'
-    response = requests.get(url, headers=headers)
+    response = requests.get(url, headers=getHeaders(token))
     return response.json()
  
 # 获取指定commit的文件列表
-def get_commit_info(repo, commit_sha):
+def get_commit_info(repo, commit_sha, token):
     url = f'https://api.github.com/repos/{repo}/commits/{commit_sha}'
-    response = requests.get(url, headers=headers)
+    response = requests.get(url, headers=getHeaders(token))
     return response.json()
 # 获取指定pr信息
-def get_pull_info(repo, pull_number):
+def get_pull_info(repo, pull_number, token):
     url = f'https://api.github.com/repos/{repo}/pulls/{pull_number}'
     print(f'url is {url}')
     print(f'headers is {headers}')
-    response = requests.get(url, headers=headers)
+    response = requests.get(url, headers=getHeaders(token))
     return response.json()
 
 # 获取指定pr的commit信息
-def get_pull_commit_info(repo, pull_number):
+def get_pull_commit_info(repo, pull_number, token):
     url = f'https://api.github.com/repos/{repo}/pulls/{pull_number}/commits'
-    response = requests.get(url, headers=headers)
+    response = requests.get(url, headers=getHeaders(token))
     return response.json()
 
-def get_pulls_files(repo, pull_number):
+def get_pulls_files(repo, pull_number, token):
     url = f'https://api.github.com/repos/{repo}/pulls/{pull_number}/files'
     print(f'url is {url}')
-    response = requests.get(url, headers=headers)
+    response = requests.get(url, headers=getHeaders(token))
     print(f'response.json() is {response.json()}')
     return response.json()
 
@@ -58,11 +58,11 @@ def writeFile(originInfo, infoType=str):
         if isinstance(originInfo, infoType):
             fout.write(originInfo+'\n')
 
-def get_pr_files(repo, pull_number):
+def get_pr_files(repo, pull_number, token):
     try:
         originInfo = {}
         
-        pfInfo = get_pulls_files(repo, pull_number)
+        pfInfo = get_pulls_files(repo, pull_number, token)
 
         for fileTemp in pfInfo:
             originInfo[fileTemp['filename']] = {
@@ -83,11 +83,11 @@ def get_pr_files(repo, pull_number):
         print(f"[ERR]: 异常报错-{e}")
 
 
-def get_change_files(repo, pull_number):
+def get_change_files(repo, pull_number, token):
     try:
         originInfo = {}
         originInfoStr = ''
-        pfInfo = get_pulls_files(repo, pull_number)
+        pfInfo = get_pulls_files(repo, pull_number, token)
         print(f'pfInfo is {pfInfo}')
         for fileTemp in pfInfo:
             originInfo[fileTemp['filename']] = fileTemp['status']
@@ -98,8 +98,6 @@ def get_change_files(repo, pull_number):
     except Exception as e:
         print(f"[ERR]: 异常报错-{e}")
         
-    
-
 def get_filterkey_info(content, keyLst, excludeSuffLst):
     strJson = {}
     if len(excludeSuffLst) != 0:
@@ -132,8 +130,8 @@ def get_filterkey_info(content, keyLst, excludeSuffLst):
 
     return strJson
 
-def filter_keywords(repo, pull_number, keyLst, excludeSuffLst):
-    content = get_pr_files(repo, pull_number)
+def filter_keywords(repo, pull_number, token, keyLst, excludeSuffLst):
+    content = get_pr_files(repo, pull_number, token)
     originInfo = {}
     with open(logFile, "w+") as fout:
         if isinstance(content, dict):
@@ -155,7 +153,7 @@ if __name__ == '__main__':
     parser.add_argument("--exclude", required=False, help="不进行敏感词筛选的文件后缀")
     
     args = parser.parse_args()
-    
+
     if args.log:
         logFile = args.log
     if args.PRN:

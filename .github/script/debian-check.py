@@ -2,8 +2,8 @@ import getGithubChangeInfo
 import os
 
 # debian前缀检查
-def debianPreCheck(repo, pull_number):
-    resulyJson = getGithubChangeInfo.get_change_files(repo, pull_number)
+def debianPreCheck(repo, pull_number, token):
+    resulyJson = getGithubChangeInfo.get_change_files(repo, pull_number, token)
     NoNeedPreFiles = ["debian/changelog", "debian/copyright", "debian/compat", "debian/source/format"]
     resultLst = []
     for file in resulyJson:
@@ -20,9 +20,9 @@ def debianPreCheck(repo, pull_number):
         print("[PASS]: debian前缀检查通过")
 
 # 敏感词检查
-def debianKeyWordsCheck(repo, pr, keyLst, excludeSuffLst):
+def debianKeyWordsCheck(repo, pr, token, keyLst, excludeSuffLst):
   try:
-    resulyJson = getGithubChangeInfo.filter_keywords(repo, pr, keyLst, excludeSuffLst)
+    resulyJson = getGithubChangeInfo.filter_keywords(repo, pr, token, keyLst, excludeSuffLst)
     if resulyJson:
         print(f"[FAIL]: 敏感词检查不通过{list(resulyJson.keys())}")
         exit(1)
@@ -56,15 +56,15 @@ if __name__ == '__main__':
     parser.add_argument("--type", required=True, help="检查类型")
     parser.add_argument("--repo", required=True, help="所有者和存储库名称。 例如，octocat/Hello-World")
     parser.add_argument("--pr", required=True, help="pr number")
-    # parser.add_argument("--token", required=True, help="github access token")
+    parser.add_argument("--token", required=True, help="github access token")
     parser.add_argument("--keys", required=False, help="查询关键字，逗号分隔")
     parser.add_argument("--exclude", required=False, help="不进行敏感词筛选的文件后缀")
     args = parser.parse_args()
 
     if args.type == 'pre-check':
-      debianPreCheck(args.repo, args.pr)
+      debianPreCheck(args.repo, args.pr, args.token)
     elif args.type == 'keys-check':
       keyLst = args.keys.split(",") if args.keys else []
       excludeSuffLst = args.exclude.split(',') if args.exclude else []
-      debianKeyWordsCheck(args.repo, args.pr, keyLst, excludeSuffLst)
+      debianKeyWordsCheck(args.repo, args.pr, args.token, keyLst, excludeSuffLst)
 
