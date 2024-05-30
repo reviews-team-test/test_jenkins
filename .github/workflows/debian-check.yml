@@ -1,5 +1,5 @@
 name: debianCheck
-on: pull_request_target
+on: pull_request
   # pull_request:
     # paths-ignore:
     #   - ".github/workflows/**"
