@@ -2,9 +2,6 @@ import requests
 import os
 import json
 
-logFile = 'githubResult.json'
-excludeSuffLst = []
-
 def getHeaders(access_token):
     # 设置头信息，包括使用access token进行认证
     headers = {
@@ -13,6 +10,7 @@ def getHeaders(access_token):
         "Accept": "application/vnd.github+json" 
     }
     return headers
+
 # 获取两次提交之间的差异
 def get_commit_diff(repo, commit_sha1, commit_sha2, token):
     url = f'https://api.github.com/repos/{repo}/compare/{commit_sha1}...{commit_sha2}'
@@ -24,6 +22,7 @@ def get_commit_info(repo, commit_sha, token):
     url = f'https://api.github.com/repos/{repo}/commits/{commit_sha}'
     response = requests.get(url, headers=getHeaders(token))
     return response.json()
+
 # 获取指定pr信息
 def get_pull_info(repo, pull_number, token):
     url = f'https://api.github.com/repos/{repo}/pulls/{pull_number}'
@@ -48,7 +47,7 @@ def get_pulls_files(repo, pull_number, token):
         print(response.json())
 
 # 写json文件
-def writeJson(originInfo, infoType=dict):
+def writeJson(originInfo, logFile, infoType=dict):
     with open(logFile, "w+") as fout:
         if isinstance(originInfo, infoType):
             fout.write(json.dumps(originInfo, indent=4, ensure_ascii=False))
@@ -78,7 +77,7 @@ def get_pr_files(repo, pull_number, token):
                 elif line.startswith("+"):
                     originInfo[fileTemp['filename']]["b"].append(line.lstrip("+"))
                     
-        writeJson(originInfo)
+        # writeJson(originInfo)
         return originInfo
     except Exception as e:
         print(f"[ERR]: 异常报错-{e}")
@@ -130,7 +129,7 @@ def get_filterkey_info(content, keyLst, excludeSuffLst):
 
     return strJson
 
-def filter_keywords(repo, pull_number, token, keyLst, excludeSuffLst):
+def filter_keywords(repo, pull_number, token, keyLst, excludeSuffLst, logFile):
     content = get_pr_files(repo, pull_number, token)
     originInfo = {}
     with open(logFile, "w+") as fout:

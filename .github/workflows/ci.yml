@@ -10,6 +10,7 @@ env:
   GITHUB_ACCESS_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   GITHUB_REPOSITORY: ${{ github.repository }}
   PULL_NUMBER: ${{ github.event.pull_request.number }}
+  EXCLUDE_FILES: "js,vue,ts,less,html,go,css,json,txt,doc,jpg,png,svg,py,yml,md"
 
 jobs:
   debian-check:
@@ -28,16 +29,22 @@ jobs:
       - name: Check Specical Words
         id: check-specical-words
         if: steps.checkout.outcome == 'success' && always()
-        run: |
-          python3 $GITHUB_WORKSPACE/.github/script/debian-check.py --type keys-check --token $GITHUB_ACCESS_TOKEN --repo $GITHUB_REPOSITORY --pr $PULL_NUMBER --keys $FILTER_KEYS --exclude $EXCLUDE_FILES
         env:
           FILTER_KEYS: "getcap,setcap,lshw,dmidecode"
-          EXCLUDE_FILES: "js,vue,ts,less,html,go,css,json,txt,doc,jpg,png,svg,py,yml,md"
+        run: |
+          python3 $GITHUB_WORKSPACE/.github/script/debian-check.py --type keys-check --token $GITHUB_ACCESS_TOKEN --repo $GITHUB_REPOSITORY --pr $PULL_NUMBER --keys $FILTER_KEYS --exclude $EXCLUDE_FILES --log keys.json
       - name: Check Env Set Words
         id: check-env-set-words
         if: steps.checkout.outcome == 'success' && always()
-        run: |
-          python3 $GITHUB_WORKSPACE/.github/script/debian-check.py --type keys-check --token $GITHUB_ACCESS_TOKEN --repo $GITHUB_REPOSITORY --pr $PULL_NUMBER --keys $FILTER_KEYS --exclude $EXCLUDE_FILES
         env:
           FILTER_KEYS: "export,unset"
-          EXCLUDE_FILES: "js,vue,ts,less,html,go,css,json,txt,doc,jpg,png,svg,py,yml,md"
+        run: |
+          python3 $GITHUB_WORKSPACE/.github/script/debian-check.py --type keys-check --token $GITHUB_ACCESS_TOKEN --repo $GITHUB_REPOSITORY --pr $PULL_NUMBER --keys $FILTER_KEYS --exclude $EXCLUDE_FILES --log env-keys.json
+      - name: Publish reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: my-artifact
+          path: |
+            keys.json
+            env-keys.json
