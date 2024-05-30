@@ -1,10 +1,11 @@
 name: debianCheck
-on: [push, pull_request]
-  # - pull_request_target:
-  #   branches:
-  #     - develop/snipe
-  #   paths-ignore:
-  #     - ".github/workflows/**"
+on:
+  pull_request:
+    branches:
+      - develop/snipe
+    paths-ignore:
+      - ".github/workflows/**"
+
 env:
   GITHUB_ACCESS_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   GITHUB_REPOSITORY: ${{ github.repository }}
@@ -21,7 +22,8 @@ jobs:
       - name: Get Pull Request Number
         run: |
           echo "PULL_NUMBER=$(echo "$GITHUB_REF" | awk -F / '{print $3}')" >> $GITHUB_ENV
-        shell: bash
+          echo "The github.event.pull_request.number is: ${{ github.event.pull_request.number }}"
+          echo "The github.event.number is: ${{ github.event.number }}"
       - name: Check Debian Prefix
         id: check-debian-prefix
         if: steps.checkout.outcome == 'success'
