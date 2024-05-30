@@ -9,6 +9,7 @@ permissions: read-all
 env:
   GITHUB_ACCESS_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   GITHUB_REPOSITORY: ${{ github.repository }}
+  PULL_NUMBER: ${{ github.event.pull_request.number }}
 
 jobs:
   debian-check:
@@ -19,11 +20,6 @@ jobs:
         uses: actions/checkout@v2
         with:
           fetch-depth: '2'
-      - name: Get Pull Request Number
-        run: |
-          echo "PULL_NUMBER=$(echo "$GITHUB_REF" | awk -F / '{print $3}')" >> $GITHUB_ENV
-          echo "The github.event.pull_request.number is: ${{ github.event.pull_request.number }}"
-          echo "The github.event.number is: ${{ github.event.number }}"
       - name: Check Debian Prefix
         id: check-debian-prefix
         if: steps.checkout.outcome == 'success'
@@ -36,7 +32,7 @@ jobs:
           python3 $GITHUB_WORKSPACE/.github/script/debian-check.py --type keys-check --token $GITHUB_ACCESS_TOKEN --repo $GITHUB_REPOSITORY --pr $PULL_NUMBER --keys $FILTER_KEYS --exclude $EXCLUDE_FILES
         env:
           FILTER_KEYS: "getcap,setcap,lshw,dmidecode"
-          EXCLUDE_FILES: 'js, vue, ts, less, html, go, css, json, txt, doc, jpg, png, svg, py, yml, md'
+          EXCLUDE_FILES: "js, vue, ts, less, html, go, css, json, txt, doc, jpg, png, svg, py, yml, md"
       - name: Check Env Set Words
         id: check-env-set-words
         if: steps.checkout.outcome == 'success' && always()
@@ -44,4 +40,4 @@ jobs:
           python3 $GITHUB_WORKSPACE/.github/script/debian-check.py --type keys-check --token $GITHUB_ACCESS_TOKEN --repo $GITHUB_REPOSITORY --pr $PULL_NUMBER --keys $FILTER_KEYS --exclude $EXCLUDE_FILES
         env:
           FILTER_KEYS: "export, unset"
-          EXCLUDE_FILES: 'js, vue, ts, less, html, go, css, json, txt, doc, jpg, png, svg, py, yml, md'
+          EXCLUDE_FILES: "js, vue, ts, less, html, go, css, json, txt, doc, jpg, png, svg, py, yml, md"
