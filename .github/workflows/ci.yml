@@ -8,7 +8,6 @@ on: [push, pull_request]
 env:
   GITHUB_ACCESS_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   GITHUB_REPOSITORY: ${{ github.repository }}
-  GITHUB_PR_NUMBER: ${{ github.event.number }}
 
 jobs:
   debian-check:
@@ -22,22 +21,17 @@ jobs:
       - name: Get Pull Request Number
         run: |
           echo "PULL_NUMBER=$(echo "$GITHUB_REF" | awk -F / '{print $3}')" >> $GITHUB_ENV
-          echo "$GITHUB_PR_NUMBER"
-          echo ${{ github.event.number }}
-          echo ${{ github.event.pull_request.number }}
-          echo "$GITHUB_ACCESS_TOKEN"
-          echo "$GITHUB_REPOSITORY"
         shell: bash
       - name: Check Debian Prefix
         id: check-debian-prefix
         if: steps.checkout.outcome == 'success'
         run: |
-          python3 $GITHUB_WORKSPACE/.github/script/debian-check.py --type pre-check --repo $GITHUB_REPOSITORY --pr $GITHUB_PR_NUMBER
+          python3 $GITHUB_WORKSPACE/.github/script/debian-check.py --type pre-check --repo $GITHUB_REPOSITORY --pr $PULL_NUMBER
       - name: Check Specical Words
         id: check-specical-words
         if: steps.checkout.outcome == 'success' && always()
         run: |
-          python3 $GITHUB_WORKSPACE/.github/script/debian-check.py --type keys-check --repo $GITHUB_REPOSITORY --PRN $GITHUB_PR_NUMBER --keys $FILTER_KEYS --exclude $EXCLUDE_FILES
+          python3 $GITHUB_WORKSPACE/.github/script/debian-check.py --type keys-check --repo $GITHUB_REPOSITORY --PRN $PULL_NUMBER --keys $FILTER_KEYS --exclude $EXCLUDE_FILES
         env:
           FILTER_KEYS: "getcap,setcap,lshw,dmidecode"
           EXCLUDE_FILES: 'js, vue, ts, less, html, go, css, json, txt, doc, jpg, png, svg, py, yml, md'
@@ -45,7 +39,7 @@ jobs:
         id: check-env-set-words
         if: steps.checkout.outcome == 'success' && always()
         run: |
-          python3 $GITHUB_WORKSPACE/.github/script/debian-check.py --type keys-check --repo $GITHUB_REPOSITORY --PRN $GITHUB_PR_NUMBER --keys $FILTER_KEYS --exclude $EXCLUDE_FILES
+          python3 $GITHUB_WORKSPACE/.github/script/debian-check.py --type keys-check --repo $GITHUB_REPOSITORY --PRN $PULL_NUMBER --keys $FILTER_KEYS --exclude $EXCLUDE_FILES
         env:
           FILTER_KEYS: "export, unset"
           EXCLUDE_FILES: 'js, vue, ts, less, html, go, css, json, txt, doc, jpg, png, svg, py, yml, md'
