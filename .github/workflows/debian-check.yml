@@ -3,9 +3,9 @@ on: pull_request
   # pull_request:
     # paths-ignore:
     #   - ".github/workflows/**"
-permissions: read-all
+
 env:
-  GITHUB_ACCESS_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  GITHUB_ACCESS_TOKEN1: ${{ secrets.GITHUB_TOKEN }}
   GITHUB_REPOSITORY: ${{ github.repository }}
   PULL_NUMBER: ${{ github.event.pull_request.number }}
   EXCLUDE_FILES: "js,vue,ts,less,html,go,css,json,txt,doc,jpg,png,svg,py,yml,md"
