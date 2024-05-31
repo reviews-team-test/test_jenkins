@@ -58,8 +58,8 @@ def writeCommentFile(commentMsg, typeStr='body'):
     print(commentMsg)
     if typeStr == 'body':
       commentMsg = '  ' + commentMsg
-    with open('comment.log', "a+") as fout:
-      fout.write(commentMsg+'<br/>')
+    with open('comment.txt', "a+") as fout:
+      fout.write(commentMsg+'\n')
   except Exception as e:
     print(f"[ERR]: writeCommentFile异常报错-{e}")
 
