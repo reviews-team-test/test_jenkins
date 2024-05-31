@@ -13,6 +13,7 @@ def debianPreCheck(repo, pull_number, token):
           debianVersionCheck(repo, pull_number)
         if file not in NoNeedPreFiles:
           resultLst.append(file)
+    writeCommentFile("Debian检查:", 'head')
     if resultLst:
       writeCommentFile(f"[FAIL]: debian前缀检查不通过{resultLst}")
       exit(1)
@@ -52,9 +53,11 @@ def debianVersionCheck():
         else:
           writeCommentFile(f'[PASS]: 版本检查通过:{versionLst}')
 
-def writeCommentFile(commentMsg):
+def writeCommentFile(commentMsg, typeStr='body'):
   try:
     print(commentMsg)
+    if typeStr == 'body':
+      commentMsg = '  ' + commentMsg
     with open('comment.log', "a+") as fout:
       fout.write(commentMsg+'<br/>')
   except Exception as e:
