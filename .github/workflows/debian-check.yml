@@ -49,6 +49,12 @@ jobs:
             keys.json
             env-keys.json
             comment.log
+      - name: show log
+        if: always()
+        run: |
+          echo "ls -lha ."
+          ls -lha .
+          cat comment.log
       - name: Comment PR
         if: always()
         uses: thollander/actions-comment-pull-request@v2
