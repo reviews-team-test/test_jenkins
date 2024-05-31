@@ -38,6 +38,11 @@ jobs:
           FILTER_KEYS: "export,unset"
         run: |
           python3 $GITHUB_WORKSPACE/.github/script/debian-check.py --type keys-check --token $GITHUB_ACCESS_TOKEN --repo $GITHUB_REPOSITORY --pr $PULL_NUMBER --keys $FILTER_KEYS --exclude $EXCLUDE_FILES --log env-keys.json
+      - name: Comment PR
+        uses: thollander/actions-comment-pull-request@v2
+        with:
+          message: |
+            环境设置敏感词检查**${{ steps.check-env-set-words.outcome }}** :wave:
       - name: Publish reports
         if: always()
         uses: actions/upload-artifact@v4
