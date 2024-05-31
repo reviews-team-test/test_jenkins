@@ -4,8 +4,8 @@ on: pull_request
     # paths-ignore:
     #   - ".github/workflows/**"
 permissions:
-  pull-requests: read
-  issues: write
+  pull-requests: write
+  contents: read
 env:
   GITHUB_ACCESS_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   GITHUB_REPOSITORY: ${{ github.repository }}
