@@ -52,7 +52,7 @@ def writeJson(originInfo, logFile, infoType=dict):
         if isinstance(originInfo, infoType):
             fout.write(json.dumps(originInfo, indent=4, ensure_ascii=False))
             
-# 写json文件
+# 写文件
 def writeFile(originInfo, infoType=str):
     with open(logFile, "a+") as fout:
         if isinstance(originInfo, infoType):
@@ -80,7 +80,7 @@ def get_pr_files(repo, pull_number, token):
         # writeJson(originInfo)
         return originInfo
     except Exception as e:
-        print(f"[ERR]: 异常报错-{e}")
+        print(f"[ERR]: get_pr_files异常报错-{e}")
 
 
 def get_change_files(repo, pull_number, token):

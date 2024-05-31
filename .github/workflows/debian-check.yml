@@ -52,5 +52,4 @@ jobs:
         if: always()
         uses: thollander/actions-comment-pull-request@v2
         with:
-          message: |
-            环境设置敏感词检查**${{ steps.check-env-set-words.outcome }}** :wave:
+          filePath: comment.log
