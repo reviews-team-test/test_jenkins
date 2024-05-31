@@ -56,7 +56,7 @@ def writeCommentFile(commentMsg):
   try:
     print(commentMsg)
     with open('comment.log', "a+") as fout:
-      fout.write(commentMsg+'\n')
+      fout.write(commentMsg+'<br/>')
   except Exception as e:
     print(f"[ERR]: writeCommentFile异常报错-{e}")
 
