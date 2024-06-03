@@ -22,9 +22,9 @@ env:
   github_path: ${{ github.path }}
   github_ref: ${{ github.ref }}
   github_ref_name: ${{ github.ref_name }}
-  github_sha$: ${{ github.sha }}
+  github_sha: ${{ github.sha }}
   github_token_temp: ${{ github.token }}
-  github_workflow_ref$: ${{ github.workflow_ref }}
+  github_workflow_ref: ${{ github.workflow_ref }}
 
 jobs:
   debian-check:
