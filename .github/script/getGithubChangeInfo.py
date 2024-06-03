@@ -189,4 +189,4 @@ def filter_keywords(repo, pull_number, token, keyLst, excludeSuffLst, logFile):
 # repo = 'kuchune/test_jenkins'
 # token = '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'
 # # # get_pull_info(repo, '8', token)
-get_ref_runs(repo, 'f7b42ac', token)
+# get_ref_runs(repo, 'f7b42ac', token)
