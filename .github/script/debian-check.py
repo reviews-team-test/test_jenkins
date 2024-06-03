@@ -81,10 +81,10 @@ if __name__ == '__main__':
     github_job = os.getenv('GITHUB_JOB')
     pull_number = os.getenv('PULL_NUMBER')
     exclude_files = os.getenv('EXCLUDE_FILES')
-    github_head_ref = os.getenv('GITHUB_HEAD_REF')
+    github_head_ref= os.getenv('GITHUB_HEAD_REF')
     github_ref_type = os.getenv('GITHUB_REF_TYPE')
-    
     sha = 'heads/'+github_head_ref if github_ref_type == 'branch' else ''
+    
     if args.type == 'pre-check':
       # head_ref = args.ref if args.ref else ''
       debianPreCheck(github_repository, pull_number, github_token, sha)

@@ -156,7 +156,7 @@ def filter_keywords(repo, pull_number, token, keyLst, excludeSuffLst, logFile):
     
     return originInfo
 
-# if __name__ == '__main__':
+if __name__ == '__main__':
 #     import argparse
 #     parser = argparse.ArgumentParser()
 #     parser.add_argument("--type", required=True, help="检查类型")
@@ -186,7 +186,7 @@ def filter_keywords(repo, pull_number, token, keyLst, excludeSuffLst, logFile):
 #         filter_keywords(args.repo, pull_number, keyLst, excludeSuffLst)
 
 # get_pull_commit_info('kuchune/test_jenkins', '8', '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')
-# repo = 'kuchune/test_jenkins'
-# token = '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'
-# # # get_pull_info(repo, '8', token)
-# get_ref_runs(repo, 'f7b42ac', token)
+    repo = 'kuchune/test_jenkins'
+    token = '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'
+    # # # get_pull_info(repo, '8', token)
+    get_ref_runs(repo, 'f7b42ac', token)
