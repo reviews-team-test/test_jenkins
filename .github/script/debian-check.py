@@ -13,7 +13,6 @@ def debianPreCheck(repo, pull_number, token):
           debianVersionCheck(repo, pull_number)
         if file not in NoNeedPreFiles:
           resultLst.append(file)
-    writeCommentFile("Debian检查:", 'head')
     if resultLst:
       writeCommentFile(f"[FAIL]: debian前缀检查不通过{resultLst}")
       exit(1)
@@ -53,11 +52,9 @@ def debianVersionCheck():
         else:
           writeCommentFile(f'[PASS]: 版本检查通过:{versionLst}')
 
-def writeCommentFile(commentMsg, typeStr='body'):
+def writeCommentFile(commentMsg, commentType='body'):
   try:
     print(commentMsg)
-    if typeStr == 'body':
-      commentMsg = '  ' + commentMsg
     with open('comment.txt', "a+") as fout:
       fout.write(commentMsg+'\n')
   except Exception as e:
@@ -68,19 +65,30 @@ if __name__ == '__main__':
     import argparse
     parser = argparse.ArgumentParser()
     parser.add_argument("--type", required=True, help="检查类型")
-    parser.add_argument("--repo", required=True, help="所有者和存储库名称。 例如，octocat/Hello-World")
-    parser.add_argument("--pr", required=True, help="pr number")
-    parser.add_argument("--token", required=True, help="github access token")
+    # parser.add_argument("--repo", required=True, help="所有者和存储库名称。 例如，octocat/Hello-World")
+    # parser.add_argument("--pr", required=True, help="pr number")
+    # parser.add_argument("--token", required=True, help="github access token")
     parser.add_argument("--keys", required=False, help="查询关键字，逗号分隔")
-    parser.add_argument("--exclude", required=False, help="不进行敏感词筛选的文件后缀")
+    # parser.add_argument("--exclude", required=False, help="不进行敏感词筛选的文件后缀")
     parser.add_argument("--log", required=False, help="输出日志文件名")
+    # parser.add_argument("--ref", required=False, help="commit sha")
     args = parser.parse_args()
+
+    github_repository = os.getenv('GITHUB_REPOSITORY')
+    github_token = os.getenv('GITHUB_TOKEN')
+    github_job = os.getenv('GITHUB_JOB')
+    github_head_ref = os.getenv('GITHUB_HEAD_REF')
+    pull_number = os.getenv('PULL_NUMBER')
+    exclude_files = os.getenv('EXCLUDE_FILES')
     
+    html_url = getGithubChangeInfo.get_ref_runs(github_repository, github_head_ref, github_token)
+    writeCommentFile(f"Debian检查:{html_url}")
     if args.type == 'pre-check':
-      debianPreCheck(args.repo, args.pr, args.token)
+      # head_ref = args.ref if args.ref else ''
+      debianPreCheck(github_repository, pull_number, github_token)
     elif args.type == 'keys-check':
       keyLst = args.keys.split(",") if args.keys else []
-      excludeSuffLst = args.exclude.split(',') if args.exclude else []
+      excludeSuffLst = exclude_files.split(',') if exclude_files else []
+      # excludeSuffLst = args.exclude.split(',') if args.exclude else []
       logFile = args.log if args.log else 'githubResult.json'
-      debianKeyWordsCheck(args.repo, args.pr, args.token, keyLst, excludeSuffLst, logFile)
-
+      debianKeyWordsCheck(github_repository, pull_number, github_token, keyLst, excludeSuffLst, logFile)

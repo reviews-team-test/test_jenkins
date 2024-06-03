@@ -7,8 +7,10 @@ permissions:
   pull-requests: write
   contents: read
 env:
-  GITHUB_ACCESS_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   GITHUB_REPOSITORY: ${{ github.repository }}
+  GITHUB_JOB: ${{ github.job }}
+  GITHUB_HEAD_REF: ${{ github.head_ref	}}
   PULL_NUMBER: ${{ github.event.pull_request.number }}
   EXCLUDE_FILES: "js,vue,ts,less,html,go,css,json,txt,doc,jpg,png,svg,py,yml,md"
 
