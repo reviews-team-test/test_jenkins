@@ -2,7 +2,7 @@ import getGithubChangeInfo
 import os
 
 # debian前缀检查
-def debianPreCheck(repo, pull_number, token):
+def debianPreCheck(repo, pull_number, token, sha):
     resulyJson = getGithubChangeInfo.get_change_files(repo, pull_number, token)
     NoNeedPreFiles = ["debian/changelog", "debian/copyright", "debian/compat", "debian/source/format"]
     resultLst = []
@@ -13,6 +13,8 @@ def debianPreCheck(repo, pull_number, token):
           debianVersionCheck(repo, pull_number)
         if file not in NoNeedPreFiles:
           resultLst.append(file)
+    html_url = getGithubChangeInfo.get_ref_runs(github_repository, sha, github_token)
+    writeCommentFile(f"Debian检查:{html_url}")
     if resultLst:
       writeCommentFile(f"[FAIL]: debian前缀检查不通过{resultLst}")
       exit(1)
@@ -79,20 +81,13 @@ if __name__ == '__main__':
     github_job = os.getenv('GITHUB_JOB')
     pull_number = os.getenv('PULL_NUMBER')
     exclude_files = os.getenv('EXCLUDE_FILES')
-    
-    github_head_ref= os.getenv('github_head_ref')
-
+    github_head_ref = os.getenv('GITHUB_HEAD_REF')
     github_ref_type = os.getenv('GITHUB_REF_TYPE')
-    if  github_ref_type == 'branch':
-      sha = 'heads/'+github_head_ref
-    elif github_ref_type == 'tag':
-      sha = 'tags/'+github_head_ref
-
-    html_url = getGithubChangeInfo.get_ref_runs(github_repository, sha, github_token)
-    writeCommentFile(f"Debian检查:{html_url}")
+    
+    sha = 'heads/'+github_head_ref if github_ref_type == 'branch' else ''
     if args.type == 'pre-check':
       # head_ref = args.ref if args.ref else ''
-      debianPreCheck(github_repository, pull_number, github_token)
+      debianPreCheck(github_repository, pull_number, github_token, sha)
     elif args.type == 'keys-check':
       keyLst = args.keys.split(",") if args.keys else []
       excludeSuffLst = exclude_files.split(',') if exclude_files else []

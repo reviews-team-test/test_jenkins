@@ -13,17 +13,9 @@ env:
   GITHUB_WORKFLOW_SHA: ${{ github.workflow_sha }}
   PULL_NUMBER: ${{ github.event.pull_request.number }}
   GITHUB_REF_TYPE: ${{ github.ref_type }}
+  GITHUB_HEAD_REF: ${{ github.head_ref }}
   EXCLUDE_FILES: "js,vue,ts,less,html,go,css,json,txt,doc,jpg,png,svg,py,yml,md"
-  github_event_name: ${{ github.event_name }}
-  github_event_path: ${{ github.event_path }}
-  github_graphql_url: ${{ github.graphql_url }}
-  github_head_ref: ${{ github.head_ref }}
-  github_path: ${{ github.path }}
-  github_ref: ${{ github.ref }}
-  github_ref_name: ${{ github.ref_name }}
-  github_sha: ${{ github.sha }}
-  github_token_temp: ${{ github.token }}
-  github_workflow_ref: ${{ github.workflow_ref }}
+
 
 jobs:
   debian-check:
