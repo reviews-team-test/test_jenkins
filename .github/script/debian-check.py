@@ -77,11 +77,11 @@ if __name__ == '__main__':
     github_repository = os.getenv('GITHUB_REPOSITORY')
     github_token = os.getenv('GITHUB_TOKEN')
     github_job = os.getenv('GITHUB_JOB')
-    github_head_ref = os.getenv('GITHUB_HEAD_REF')
+    github_sha = os.getenv('GITHUB_SHA')
     pull_number = os.getenv('PULL_NUMBER')
     exclude_files = os.getenv('EXCLUDE_FILES')
     
-    html_url = getGithubChangeInfo.get_ref_runs(github_repository, github_head_ref, github_token)
+    html_url = getGithubChangeInfo.get_ref_runs(github_repository, github_sha, github_token)
     writeCommentFile(f"Debian检查:{html_url}")
     if args.type == 'pre-check':
       # head_ref = args.ref if args.ref else ''

@@ -10,7 +10,7 @@ env:
   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   GITHUB_REPOSITORY: ${{ github.repository }}
   GITHUB_JOB: ${{ github.job }}
-  GITHUB_HEAD_REF: ${{ github.head_ref	}}
+  GITHUB_SHA: ${{ github.sha }}
   PULL_NUMBER: ${{ github.event.pull_request.number }}
   EXCLUDE_FILES: "js,vue,ts,less,html,go,css,json,txt,doc,jpg,png,svg,py,yml,md"
 
@@ -41,7 +41,7 @@ jobs:
         env:
           FILTER_KEYS: "export,unset"
         run: |
-          python3 $GITHUB_WORKSPACE/.github/script/debian-check.py --type keys-check -keys $FILTER_KEYS --log env-keys.json
+          python3 $GITHUB_WORKSPACE/.github/script/debian-check.py --type keys-check --keys $FILTER_KEYS --log env-keys.json
       - name: Publish reports
         if: always()
         uses: actions/upload-artifact@v4
