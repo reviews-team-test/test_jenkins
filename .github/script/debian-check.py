@@ -80,9 +80,15 @@ if __name__ == '__main__':
     pull_number = os.getenv('PULL_NUMBER')
     exclude_files = os.getenv('EXCLUDE_FILES')
     
-    github_workflow_sha= os.getenv('GITHUB_WORKFLOW_SHA')
-    github_ref_type = os.getenv('GITHUB_REF_TYPE')      
-    html_url = getGithubChangeInfo.get_ref_runs(github_repository, github_workflow_sha, github_token)
+    github_head_ref= os.getenv('github_head_ref')
+
+    github_ref_type = os.getenv('GITHUB_REF_TYPE')
+    if  github_ref_type == 'branch':
+      sha = 'heads/'+github_head_ref
+    elif github_ref_type == 'tag':
+      sha = 'tags/'+github_head_ref
+
+    html_url = getGithubChangeInfo.get_ref_runs(github_repository, sha, github_token)
     writeCommentFile(f"Debian检查:{html_url}")
     if args.type == 'pre-check':
       # head_ref = args.ref if args.ref else ''
