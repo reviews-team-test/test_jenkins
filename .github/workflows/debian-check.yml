@@ -14,7 +14,7 @@ env:
   PULL_NUMBER: ${{ github.event.pull_request.number }}
   GITHUB_REF_TYPE: ${{ github.ref_type }}
   EXCLUDE_FILES: "js,vue,ts,less,html,go,css,json,txt,doc,jpg,png,svg,py,yml,md"
-  github_event: ${{ github.event }}
+  GITHUB_EVENT: ${{ github.event }}
   github_event_name: ${{ github.event_name }}
   github_event_path: ${{ github.event_path }}
   github_graphql_url: ${{ github.graphql_url }}
