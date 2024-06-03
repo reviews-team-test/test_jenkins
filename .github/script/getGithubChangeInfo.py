@@ -26,23 +26,40 @@ def get_commit_info(repo, commit_sha, token):
 # 获取指定pr信息
 def get_pull_info(repo, pull_number, token):
     url = f'https://api.github.com/repos/{repo}/pulls/{pull_number}'
-    print(f'url is {url}')
-    print(f'headers is {headers}')
+    print(f'apiurl is {url}')
     response = requests.get(url, headers=getHeaders(token))
+    # print(f"response is {response.json()}")
+    # writeJson(response.json(), 'r.json')
     return response.json()
 
 # 获取指定pr的commit信息
 def get_pull_commit_info(repo, pull_number, token):
     url = f'https://api.github.com/repos/{repo}/pulls/{pull_number}/commits'
+    print(f'apiurl is {url}')
     response = requests.get(url, headers=getHeaders(token))
+    # print(f"response is {response.json()}")
     return response.json()
 
 def get_pulls_files(repo, pull_number, token):
     url = f'https://api.github.com/repos/{repo}/pulls/{pull_number}/files'
     print(f'apiurl is {url}')
     response = requests.get(url, headers=getHeaders(token))
+    # print(f"response is {response.json()}")
     if response.status_code == 200:
         return response.json()
+    else:
+        print(response.json())
+
+# 获取commit的run链接地址
+def get_ref_runs(repo, commitSHA, token):
+    url = f'https://api.github.com/repos/{repo}/commits/{commitSHA}/check-runs'
+    print(f'apiurl is {url}')
+    response = requests.get(url, headers=getHeaders(token))
+    if response.status_code == 200:
+        writeJson(response.json(), 'r.json')
+        for jobInfo in response.json()['check_runs']:
+            if jobInfo['name'] == os.getenv('GITHUB_JOB'):
+                return jobInfo['html_url']
     else:
         print(response.json())
 
@@ -52,8 +69,8 @@ def writeJson(originInfo, logFile, infoType=dict):
         if isinstance(originInfo, infoType):
             fout.write(json.dumps(originInfo, indent=4, ensure_ascii=False))
             
-# 写json文件
-def writeFile(originInfo, infoType=str):
+# 写文件
+def writeFile(originInfo, logFile, infoType=str):
     with open(logFile, "a+") as fout:
         if isinstance(originInfo, infoType):
             fout.write(originInfo+'\n')
@@ -80,7 +97,7 @@ def get_pr_files(repo, pull_number, token):
         # writeJson(originInfo)
         return originInfo
     except Exception as e:
-        print(f"[ERR]: 异常报错-{e}")
+        print(f"[ERR]: get_pr_files异常报错-{e}")
 
 
 def get_change_files(repo, pull_number, token):
@@ -167,3 +184,9 @@ def filter_keywords(repo, pull_number, token, keyLst, excludeSuffLst, logFile):
 #         if args.exclude:
 #             excludeSuffLst = args.exclude.split(',')
 #         filter_keywords(args.repo, pull_number, keyLst, excludeSuffLst)
+
+# get_pull_commit_info('kuchune/test_jenkins', '8', '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')
+# repo = 'kuchune/test_jenkins'
+# token = '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'
+# # # get_pull_info(repo, '8', token)
+# get_ref_runs(repo, 'f7b42ac', token)

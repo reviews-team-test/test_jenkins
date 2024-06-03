@@ -3,12 +3,27 @@ on: pull_request
   # pull_request:
     # paths-ignore:
     #   - ".github/workflows/**"
-permissions: read-all
+permissions:
+  pull-requests: write
+  contents: read
 env:
-  GITHUB_ACCESS_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   GITHUB_REPOSITORY: ${{ github.repository }}
+  GITHUB_JOB: ${{ github.job }}
+  GITHUB_WORKFLOW_SHA: ${{ github.workflow_sha }}
   PULL_NUMBER: ${{ github.event.pull_request.number }}
+  GITHUB_REF_TYPE: ${{ github.ref_type }}
   EXCLUDE_FILES: "js,vue,ts,less,html,go,css,json,txt,doc,jpg,png,svg,py,yml,md"
+  github_event_name: ${{ github.event_name }}
+  github_event_path: ${{ github.event_path }}
+  github_graphql_url: ${{ github.graphql_url }}
+  github_head_ref: ${{ github.head_ref }}
+  github_path: ${{ github.path }}
+  github_ref: ${{ github.ref }}
+  github_ref_name: ${{ github.ref_name }}
+  github_sha: ${{ github.sha }}
+  github_token_temp: ${{ github.token }}
+  github_workflow_ref: ${{ github.workflow_ref }}
 
 jobs:
   debian-check:
@@ -23,21 +38,21 @@ jobs:
         id: check-debian-prefix
         if: steps.checkout.outcome == 'success'
         run: |
-          python3 $GITHUB_WORKSPACE/.github/script/debian-check.py --type pre-check --token $GITHUB_ACCESS_TOKEN --repo $GITHUB_REPOSITORY --pr $PULL_NUMBER
+          python3 $GITHUB_WORKSPACE/.github/script/debian-check.py --type pre-check
       - name: Check Specical Words
         id: check-specical-words
         if: steps.checkout.outcome == 'success' && always()
         env:
           FILTER_KEYS: "getcap,setcap,lshw,dmidecode"
         run: |
-          python3 $GITHUB_WORKSPACE/.github/script/debian-check.py --type keys-check --token $GITHUB_ACCESS_TOKEN --repo $GITHUB_REPOSITORY --pr $PULL_NUMBER --keys $FILTER_KEYS --exclude $EXCLUDE_FILES --log keys.json
+          python3 $GITHUB_WORKSPACE/.github/script/debian-check.py --type keys-check --keys $FILTER_KEYS --log keys.json
       - name: Check Env Set Words
         id: check-env-set-words
         if: steps.checkout.outcome == 'success' && always()
         env:
           FILTER_KEYS: "export,unset"
         run: |
-          python3 $GITHUB_WORKSPACE/.github/script/debian-check.py --type keys-check --token $GITHUB_ACCESS_TOKEN --repo $GITHUB_REPOSITORY --pr $PULL_NUMBER --keys $FILTER_KEYS --exclude $EXCLUDE_FILES --log env-keys.json
+          python3 $GITHUB_WORKSPACE/.github/script/debian-check.py --type keys-check --keys $FILTER_KEYS --log env-keys.json
       - name: Publish reports
         if: always()
         uses: actions/upload-artifact@v4
@@ -46,3 +61,8 @@ jobs:
           path: |
             keys.json
             env-keys.json
+      - name: Comment PR
+        if: always()
+        uses: thollander/actions-comment-pull-request@v2
+        with:
+          filePath: comment.txt
