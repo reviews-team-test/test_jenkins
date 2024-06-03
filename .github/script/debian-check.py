@@ -77,7 +77,7 @@ if __name__ == '__main__':
     github_repository = os.getenv('GITHUB_REPOSITORY')
     github_token = os.getenv('GITHUB_TOKEN')
     github_job = os.getenv('GITHUB_JOB')
-    github_sha = os.getenv('GITHUB_SHA')
+    github_workflow_sha = os.getenv('GITHUB_WORKFLOW_SHA')
     pull_number = os.getenv('PULL_NUMBER')
     exclude_files = os.getenv('EXCLUDE_FILES')
     

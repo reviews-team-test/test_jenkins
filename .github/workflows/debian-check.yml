@@ -10,7 +10,7 @@ env:
   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   GITHUB_REPOSITORY: ${{ github.repository }}
   GITHUB_JOB: ${{ github.job }}
-  GITHUB_SHA: ${{ github.sha }}
+  GITHUB_WORKFLOW_SHA: ${{ github.workflow_sha }}
   PULL_NUMBER: ${{ github.event.pull_request.number }}
   EXCLUDE_FILES: "js,vue,ts,less,html,go,css,json,txt,doc,jpg,png,svg,py,yml,md"
 
