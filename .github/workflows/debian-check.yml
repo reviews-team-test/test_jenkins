@@ -16,17 +16,15 @@ env:
   EXCLUDE_FILES: "js,vue,ts,less,html,go,css,json,txt,doc,jpg,png,svg,py,yml,md"
   github_event: ${{ github.event }}
   github_event_name: ${{ github.event_name }}
-  github.event_path: ${{ github.event_path }}
-  github.graphql_url: ${{ github.graphql_url }}
-  github.head_ref: ${{ github.head_ref }}
-  github.path: ${{ github.path }}
-  github.ref: ${{ github.ref }}
-  github.ref_name: ${{ github.ref_name }}
-  github.ref_type: ${{ github.ref_type }}
-  github.sha$: ${{ github.sha }}
-  github.token: ${{ github.token }}
-  github.workflow_ref$: ${{ github.workflow_ref }}
-  github.workflow_sha: ${{ github.workflow_sha }}
+  github_event_path: ${{ github.event_path }}
+  github_graphql_url: ${{ github.graphql_url }}
+  github_head_ref: ${{ github.head_ref }}
+  github_path: ${{ github.path }}
+  github_ref: ${{ github.ref }}
+  github_ref_name: ${{ github.ref_name }}
+  github_sha$: ${{ github.sha }}
+  github_token_temp: ${{ github.token }}
+  github_workflow_ref$: ${{ github.workflow_ref }}
 
 jobs:
   debian-check:
