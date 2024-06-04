@@ -12,7 +12,7 @@ jobs:
         with:
           ref: ${{ github.event.pull_request.head.sha }}
           persist-credentials: false
-      - uses: linuxdeepin/action-cppcheck@main
+      - uses: kuchune/action-cppcheck@main
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           repository: ${{ github.repository }}
