@@ -18,7 +18,12 @@ jobs:
           go-version: stable
       - name: mode check
         if: always() && hashFiles('go.mod') == ''
-        run: go mod init ${git.repository}
+        run: go mod init ${github.repository}
+      - name: mode1 check
+        if: always() && hashFiles('go.mod') == ''
+        run: go mod init ${project}
+        env:
+          project: ${{ github.repository }}
       - name: GolangCILint Check
         if: success()
         uses: golangci/golangci-lint-action@v6
