@@ -65,11 +65,10 @@ def get_ref_runs(repo, commitSHA, token):
 
 def get_repo_languages(repo, token):
     url = f'https://api.github.com/repos/{repo}/languages'
-    print(f'apiurl is {url}')
+    # print(f'apiurl is {url}')
     response = requests.get(url, headers=getHeaders(token))
     if response.status_code == 200:
-        print(f'response is {response.json()}')
-        return response.json()
+        print(list(response.json().keys())[0])
     else:
         print(response.json())
 # 写json文件
@@ -195,8 +194,8 @@ if __name__ == '__main__':
 #         filter_keywords(args.repo, pull_number, keyLst, excludeSuffLst)
 
 # get_pull_commit_info('kuchune/test_jenkins', '8', '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')
-    # repo = 'linuxdeepin/dde-file-manager'
-    repo = 'linuxdeepin/dde-daemon'
+    repo = 'linuxdeepin/dde-file-manager'
+    # repo = 'linuxdeepin/dde-daemon'
     token = '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'
     # # # get_pull_info(repo, '8', token)
     # get_ref_runs(repo, 'f7b42ac', token)
