@@ -13,11 +13,14 @@ jobs:
         with:
           ref: ${{ github.event.pull_request.head.sha }}
           persist-credentials: false
-      # - uses: actions/setup-go@v5
-      #   with:
-      #     go-version: stable
-      # - name: GolangCILint Check
-      #   uses: golangci/golangci-lint-action@v6
-      #   with:
-      #     version: v1.58
-      - uses: trapajim/go-pipeline-action@v1
+      - uses: actions/setup-go@v5
+        with:
+          go-version: stable
+      - name: mode check
+        if: always() && hashFiles('go.mod')
+        run: go mod init ${git.repository}
+      - name: GolangCILint Check
+        if: success()
+        uses: golangci/golangci-lint-action@v6
+        with:
+          version: v1.58
