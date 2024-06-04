@@ -13,13 +13,11 @@ def debianPreCheck(repo, pull_number, token, sha):
           debianVersionCheck(repo, pull_number)
         if file not in NoNeedPreFiles:
           resultLst.append(file)
-    html_url = getGithubChangeInfo.get_ref_runs(github_repository, sha, github_token)
-    writeCommentFile(f"Debian检查:{html_url}")
     if resultLst:
       writeCommentFile(f"[FAIL]: debian前缀检查不通过{resultLst}")
       exit(1)
     else:
-      writeCommentFile("[PASS]: debian前缀检查通过")
+      print("[PASS]: debian前缀检查通过")
 
 # 敏感词检查
 def debianKeyWordsCheck(repo, pr, token, keyLst, excludeSuffLst, logFile):
@@ -30,7 +28,7 @@ def debianKeyWordsCheck(repo, pr, token, keyLst, excludeSuffLst, logFile):
       writeCommentFile(f"[FAIL]: {showStr}敏感词检查不通过{list(resulyJson.keys())}")
       exit(1)
     else:
-      writeCommentFile(f"[PASS]: {showStr}敏感词检查通过")
+      print(f"[PASS]: {showStr}敏感词检查通过")
   except Exception as e:
     writeCommentFile(f"[ERR]: {showStr}异常报错-{e}")
     exit(1)
@@ -43,7 +41,7 @@ def debianVersionCheck():
         version0 = versionLst[0].rstrip('\n')
         version1 = versionLst[1].rstrip('\n')
         if os.system(f'dpkg --compare-versions {version0} gt {version1}') == 0:
-          writeCommentFile(f'[PASS]: 版本检查通过:{version0}|{version1}')
+          print(f'[PASS]: 版本检查通过:{version0}|{version1}')
         else:
           writeCommentFile(f'[FAIL]: 版本检查不通过:{version0}|{version1}')
           exit(1)
@@ -52,15 +50,36 @@ def debianVersionCheck():
           writeCommentFile(f'[ERR]: 版本检查异常:{versionLst}')
           exit(1)
         else:
-          writeCommentFile(f'[PASS]: 版本检查通过:{versionLst}')
+          print(f'[PASS]: 版本检查通过:{versionLst}')
 
 def writeCommentFile(commentMsg, commentType='body'):
   try:
     print(commentMsg)
     with open('comment.txt', "a+") as fout:
       fout.write(commentMsg+'\n')
+    postStep()
   except Exception as e:
     print(f"[ERR]: writeCommentFile异常报错-{e}")
+
+def writeHeadToCommentFile(filename, content):
+    temp_filename = filename + '.tmp'
+
+    # 写入新内容到临时文件
+    with open(temp_filename, 'w', encoding='utf-8') as temp_file:
+        temp_file.write(content + '\n')
+
+    # 追加原始文件的内容到临时文件
+    with open(filename, 'r', encoding='utf-8') as original_file, open(temp_filename, 'a', encoding='utf-8') as temp_file:
+        temp_file.writelines(original_file)
+
+    os.replace(temp_filename, filename)
+
+def postStep():
+    with open('comment.txt', 'r', encoding='utf-8') as commentFile:
+      lines = commentFile.readlines()
+      html_url = getGithubChangeInfo.get_ref_runs(github_repository, sha, github_token)
+      if f"Debian检查:{html_url}" not in lines:
+        writeHeadToCommentFile(f"Debian检查:{html_url}", 'comment.txt')
 
 
 if __name__ == '__main__':
