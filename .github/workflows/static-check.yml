@@ -37,4 +37,6 @@ jobs:
           version: v1.58
           args: --out-format=colored-line-number
       - if: always()
-        run: echo '::error file=test.go,line=1,col=16::C++ source files not allowed when not using cgo or SWIG(typecheck)'
+        run: |
+          ls -l
+          echo '::error file=test.go,line=1,col=16::C++ source files not allowed when not using cgo or SWIG(typecheck)'
