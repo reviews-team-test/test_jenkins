@@ -3,18 +3,21 @@ on: pull_request
 
 
 jobs:
-  cppchceck:
-    name: cppcheck
+  golangcilint:
+    name: golangcilint
     runs-on: ubuntu-latest
     steps:
       - run: export
-      - uses: actions/checkout@v3
+      - name: Checkout Code
+        uses: actions/checkout@v3
         with:
           ref: ${{ github.event.pull_request.head.sha }}
           persist-credentials: false
-      - uses: kuchune/action-cppcheck@main
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          repository: ${{ github.repository }}
-          pull_request_id: ${{ github.event.pull_request.number }}
-          allow_approve: false
+      # - uses: actions/setup-go@v5
+      #   with:
+      #     go-version: stable
+      # - name: GolangCILint Check
+      #   uses: golangci/golangci-lint-action@v6
+      #   with:
+      #     version: v1.58
+      - uses: trapajim/go-pipeline-action@v1
