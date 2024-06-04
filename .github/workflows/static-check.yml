@@ -18,12 +18,15 @@ jobs:
           go-version: stable
       - name: mode check
         if: always() && hashFiles('go.mod') == ''
-        run: go mod init ${github.repository}
-      - name: mode1 check
-        if: always() && hashFiles('go.mod') == ''
-        run: go mod init ${project}
+        run: |
+          go mod init ${project}
+          go mod tidy
         env:
           project: ${{ github.repository }}
+      - name: config check
+        if: always() && hashFiles('.golangci.yml') == ''
+        run: |
+          wget -O .golangci.yml https://raw.githubusercontent.com/kuchune/action-cppcheck/main/config/golangci.yml
       - name: GolangCILint Check
         if: success()
         uses: golangci/golangci-lint-action@v6
