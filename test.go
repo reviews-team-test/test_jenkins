@@ -4,6 +4,6 @@ func main() {
     var a string = "Runoob"
     fmt.Println(a)
 
-    var b int = 1, 2
+    var c int = 1, 2
     fmt.Println(b, c)
 }
