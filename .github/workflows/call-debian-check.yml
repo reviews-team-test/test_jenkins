@@ -11,10 +11,12 @@ permissions:
 
 jobs:
   debian-check:
+    uses: kuchune/.github/.github/workflows/debian-check.yml@master
+    with:
+      job_name: ${{ github.job }}
+      repository: ${{ github.repository }}
+      exclude_files: "js,vue,ts,less,html,go,css,json,txt,doc,jpg,png,svg,py,yml,md"
+  test:
     runs-on: ubuntu-latest
     steps:
-      - uses: kuchune/.github/.github/workflows/debian-check.yml@master
-        with:
-          job_name: ${{ github.job }}
-          repository: ${{ github.repository }}
-          exclude_files: "js,vue,ts,less,html,go,css,json,txt,doc,jpg,png,svg,py,yml,md"
+      - run: echo ${{ github.job }}
