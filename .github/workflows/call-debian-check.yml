@@ -1,0 +1,22 @@
+name: debianCheck
+on: pull_request
+  # pull_request:
+    # paths-ignore:
+    #   - ".github/workflows/**"
+permissions:
+  pull-requests: write
+  contents: read
+  checks: read
+env:
+  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  GITHUB_REPOSITORY: ${{ github.repository }}
+  GITHUB_JOB: ${{ github.job }}
+  GITHUB_WORKFLOW_SHA: ${{ github.workflow_sha }}
+  PULL_NUMBER: ${{ github.event.pull_request.number }}
+  GITHUB_REF_TYPE: ${{ github.ref_type }}
+  GITHUB_HEAD_REF: ${{ github.head_ref }}
+  EXCLUDE_FILES: "js,vue,ts,less,html,go,css,json,txt,doc,jpg,png,svg,py,yml,md"
+
+jobs:
+  debian-check:
+    uses: kuchune/.github/.github/workflows/debian-check.yml@master
