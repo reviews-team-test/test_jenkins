@@ -17,5 +17,4 @@ jobs:
     with:
       job_name: "debian-check"
       repository: ${{ github.repository }}
-      exclude_files: "js,vue,ts,less,html,go,css,json,txt,doc,jpg,png,svg,py,yml,md"
     
