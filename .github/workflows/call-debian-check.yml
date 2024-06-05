@@ -12,7 +12,8 @@ permissions:
 jobs:
   debian-check:
     uses: kuchune/.github/.github/workflows/debian-check.yml@master
-    secrets: inherit
+    secrets:
+      access_token: ${{ secrets.GITHUB_TOKEN }}
     with:
       job_name: "debian-check"
       repository: ${{ github.repository }}
