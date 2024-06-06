@@ -14,5 +14,4 @@ jobs:
       - name: Display type
         id: display
         run: |
-          echo ${{ steps.read.outputs.primary_language}} | tee -a $GITHUB_STEP_SUMMARY
-
+          echo ${{ steps.read.outputs.primaryLanguage}}
