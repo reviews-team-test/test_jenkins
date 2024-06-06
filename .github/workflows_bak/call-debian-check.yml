@@ -1,13 +1,12 @@
 name: debianCheck
-on: pull_request
-  # pull_request:
-    # paths-ignore:
-    #   - ".github/workflows/**"
+on:
+  pull_request_target:
+    types: [opened, synchronize, reopened]
+
 permissions:
   pull-requests: write
   contents: read
   checks: read
-
 
 jobs:
   debian-check:
