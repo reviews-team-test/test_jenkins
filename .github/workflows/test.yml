@@ -10,7 +10,7 @@ jobs:
     steps:
       - name: Read integration_type
         id: read
-        uses: fiddlermikey/action-get-primary-language@v1
+        uses: fiddlermikey/action-get-primary-language@v1.0
         with:
           token: ${{ secrets.GITHUB_TOKEN}}
       - name: Display type
