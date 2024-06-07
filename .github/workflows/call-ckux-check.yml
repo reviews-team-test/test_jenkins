@@ -1,0 +1,17 @@
+name: staticCheck
+on: [push]
+
+permissions:
+    contents: read
+    pull-requests: read
+    checks: write
+    
+jobs:
+    static-check:
+        uses: kuchune/.github/.github/workflows/ckux-check.yml@master
+        secrets:
+            access_token: ${{ secrets.GITHUB_TOKEN }}
+        with:
+            repository: ${{ github.repository }}
+            check-type: "static-check"
+        
