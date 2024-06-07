@@ -39,9 +39,10 @@ jobs:
       - id: git-full-diff
         uses: fernandosmither/git-full-diff@v1.0.2
       - name: display diff
+        env: 
+          diff_patch: ${{ steps.git-full-diff.outputs.diff }}
         run: |
-          EOF=$(dd if=/dev/urandom bs=15 count=1 status=none | base64)
-          cat <<$EOF
-          ${{ steps.git-full-diff.outputs.diff }}
-          $EOF
-        shell: bash
+          echo "$diff_patch" | while IFS= read -r line
+          do
+            echo "处理行: $line"
+          done
