@@ -29,5 +29,19 @@ jobs:
             echo "list all debian files that have changed: $DEBIAN_CHANGED_FILES"
             exit 1
           fi
-
-
+  hello_world_job:
+    runs-on: ubuntu-latest
+    name: A job to say hello
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - id: git-full-diff
+        uses: fernandosmither/git-full-diff@v1.0.2
+      - name: display diff
+        run: |
+          EOF=$(dd if=/dev/urandom bs=15 count=1 status=none | base64)
+          cat <<$EOF
+          ${{ steps.git-full-diff.outputs.diff }}
+          $EOF
+        shell: bash
