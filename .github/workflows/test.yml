@@ -3,6 +3,8 @@ on: [push]
 
 jobs:
   read_type:
+    outputs:
+      primaryLanguage: ${{ steps.read.outputs.primary_languag }}
     runs-on: ubuntu-latest
     name: Detect Primary Language
     steps:
@@ -14,5 +16,5 @@ jobs:
       - name: Display type
         id: display
         run: |
-          echo ${{ steps.read.outputs.primary_language }}
+          echo ${{ steps.read.outputs.primaryLanguage }}
 
