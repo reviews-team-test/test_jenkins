@@ -1,7 +1,5 @@
 name: ckuxCheck
-on: 
-    pull_request_target:
-        types: [opened, synchronize, reopened]
+on: [push]
 
 permissions:
     contents: read
