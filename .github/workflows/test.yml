@@ -18,14 +18,14 @@ jobs:
         with:
           files: 'debian/**'  # Alternatively using: `docs/**`
           files_ignore: |
-            'debian/patches/*'
-            'debian/manpage.*'
-            'debian/*.manpages'
+            debian/patches/*
+            debian/manpage.*
+            debian/*.manpages
       - name: List all changed files
         env:
           DEBIAN_CHANGED_FILES: ${{ steps.changed-files.outputs.all_changed_files }}
         run: |
-          if [ ! -z $DEBIAN_CHANGED_FILES ]; then
+          if [ ! -z ${DEBIAN_CHANGED_FILES} ]; then
             echo "list all debian files that have changed: $DEBIAN_CHANGED_FILES"
             exit 1
           fi
