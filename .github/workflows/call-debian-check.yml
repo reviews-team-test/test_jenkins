@@ -1,0 +1,16 @@
+name: debianCheck
+on:
+  pull_request_target:
+    types: [opened, synchronize, reopened]
+
+permissions:
+  pull-requests: write
+  contents: read
+  checks: read
+
+jobs:
+  debian-check:
+    uses: kuchune/.github/.github/workflows/debian-check.yml@master
+    with:
+      job_name: "debian-check"
+    
