@@ -11,8 +11,5 @@ permissions:
 jobs:
     ckux-check:
         uses: kuchune/.github/.github/workflows/ckux-check.yml@develop
-        secrets:
-            access_token: ${{ secrets.GITHUB_TOKEN }}
         with:
-            repository: ${{ github.repository }}
             check-type: "static-check"
