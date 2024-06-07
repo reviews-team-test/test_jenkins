@@ -1,0 +1,20 @@
+name: CI Testing Primary Language
+on: [push]
+
+jobs:
+  read_type:
+    outputs:
+      primaryLanguage: ${{ steps.read.outputs.primary_languag }}
+    runs-on: ubuntu-latest
+    name: Detect Primary Language
+    steps:
+      - name: Read integration_type
+        id: read
+        uses: fiddlermikey/action-get-primary-language@v1.0
+        with:
+          token: ${{ secrets.GITHUB_TOKEN}}
+      - name: Display type
+        id: display
+        run: |
+          echo ${{ steps.read.outputs.primary_languag }}
+
