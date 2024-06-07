@@ -8,6 +8,10 @@ permissions:
   pull-requests: read
   checks: write
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   static-check:
     uses: kuchune/.github/.github/workflows/static-check.yml@develop
