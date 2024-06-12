@@ -76,6 +76,7 @@ jobs:
         env:
           DEBIAN_CHANGED_FILES: ${{ steps.changed-files.outputs.all_changed_files }}
         run: |
+          repository="dde-daemon"
           result=$(echo ${repository} | grep "/")
           project_tmp=${repository}
           if [[ "$result" != "" ]]; then
