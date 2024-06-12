@@ -46,3 +46,4 @@ jobs:
           do
             echo "处理行: $line"
           done
+          echo ${{ github.repository }}
