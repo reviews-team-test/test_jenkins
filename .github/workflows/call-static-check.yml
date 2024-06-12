@@ -14,4 +14,4 @@ concurrency:
 
 jobs:
   static-check:
-    uses: kuchune/.github/.github/workflows/static-check.yml@develop
+    uses: kuchune/.github/.github/workflows/static-check.yml@master

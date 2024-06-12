@@ -14,7 +14,7 @@ concurrency:
 
 jobs:
   debian-check:
-    uses: kuchune/.github/.github/workflows/debian-check.yml@develop
+    uses: kuchune/.github/.github/workflows/debian-check.yml@master
     with:
       job_name: "debian-check"
     
