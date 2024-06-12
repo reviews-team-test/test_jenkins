@@ -44,7 +44,7 @@ jobs:
             debian/manpage.*
             debian/*.manpages
       - name: List all changed files
-        if: ${{ steps.changed-files.outputs.all_changed_files }} != ''
+        if: ${{ steps.changed-files.outputs.all_changed_files != '' }}
         env:
           DEBIAN_CHANGED_FILES: ${{ steps.changed-files.outputs.all_changed_files }}
         run: |
@@ -64,7 +64,7 @@ jobs:
         with:
           files: 'debian/changelog'
       - name: Check Version
-        if: ${{ steps.changed-files.outputs.all_changed_files }} != ''
+        if: ${{ steps.changed-files.outputs.all_changed_files != '' }}
         env:
           DEBIAN_CHANGED_FILES: ${{ steps.changed-files.outputs.all_changed_files }}
         run: |
