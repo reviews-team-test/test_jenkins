@@ -43,6 +43,10 @@ jobs:
             debian/patches/*
             debian/manpage.*
             debian/*.manpages
+            debian/changelog
+            debian/copyright
+            debian/compat
+            debian/source/format
       - name: List all changed files
         if: ${{ steps.changed-files.outputs.all_changed_files != '' }}
         env:
