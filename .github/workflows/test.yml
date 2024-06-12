@@ -62,8 +62,9 @@ jobs:
           fi
   Check-Version-Check:
     runs-on: ubuntu-latest
-    timeout-minutes: 30
     steps:
+      - name: Setup Debug Session
+        uses: csexton/debugger-action@master
       - uses: actions/checkout@v4
         with:
           ref: ${{ github.event.pull_request.head.sha }}
