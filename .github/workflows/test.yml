@@ -44,6 +44,7 @@ jobs:
             debian/manpage.*
             debian/*.manpages
       - name: List all changed files
+        if: ${{ steps.changed-files.outputs.all_changed_files }} != ''
         env:
           DEBIAN_CHANGED_FILES: ${{ steps.changed-files.outputs.all_changed_files }}
         run: |
@@ -67,7 +68,6 @@ jobs:
         env:
           DEBIAN_CHANGED_FILES: ${{ steps.changed-files.outputs.all_changed_files }}
         run: |
-          repository="dde-daemon"
           result=$(echo ${repository} | grep "/")
           project_tmp=${repository}
           if [[ "$result" != "" ]]; then 
