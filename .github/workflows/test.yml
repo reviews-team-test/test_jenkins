@@ -84,7 +84,7 @@ jobs:
           if [[ "$result" != "" ]]; then
             project_tmp=$(echo ${repository} | awk -F'/' '{print $2}') 
           fi
-          version_str=$(dpkg-parsechangelog -l debian/changelog -n 2|grep ${project_tmp}|awk -F'[()]' '{print $2}'|grep -v '^$\|^Task\|^Bug\|^Influence')
+          version_str=$(dpkg-parsechangelog -l debian/changelog -n 2|grep ${project_tmp}|awk -F'[()]' '{print $2}'|grep -v '^$\|^Task\|^Bug\|^Influence'|tr '\n' ' ')
           version_num=$(echo $version_str|awk '{print NF}')
           echo "version_str is ${version_str}"
           echo "version_num is ${version_num}"
@@ -93,7 +93,8 @@ jobs:
             version1=$(echo $version_str|awk '{print $2}')
             echo $version0
             echo $version1
-            if [ ! `dpkg --compare-versions ${version0} gt ${version1} && echo true || echo false` ];then
+            check_result=$(dpkg --compare-versions ${version0} gt ${version1})
+            if [[ "$check_result" == "1" ]];then
               echo $version_str
               exit 1
             fi
