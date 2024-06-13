@@ -64,24 +64,23 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
       - name: Get changed files
         id: changed-files
         uses: tj-actions/changed-files@v44
         with:
           files: 'debian/changelog'
-      - uses: actions/checkout@v4
-        with:
-          ref: ${{ github.event.pull_request.head.sha }}
-          sparse-checkout: debian/changelog
-          sparse-checkout-cone-mode: false
-          path: tools
-      - name: Setup Debug Session
-        uses: csexton/debugger-action@master
+      - name: List all changed files
+        if: ${{ steps.changed-files.outputs.all_changed_files != '' }}
+        env:
+          DEBIAN_CHANGED_FILES: ${{ steps.changed-files.outputs.all_changed_files }}
+        run: |
+          if [ ! -z ${DEBIAN_CHANGED_FILES} ]; then
+            echo "list all debian files that have changed: $DEBIAN_CHANGED_FILES"
+          fi
       - name: Check Version
         if: ${{ steps.changed-files.outputs.all_changed_files != '' }}
-        # run: bash ".github/workflows/version-check.bash"
-        working-directory: tools
-        shell: bash
         run: |
           repository="dde-daemon"
           result=$(echo ${repository} | grep "/" || true)
