@@ -64,13 +64,16 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-        with:
-          ref: ${{ github.event.pull_request.head.sha }}
       - name: Get changed files
         id: changed-files
         uses: tj-actions/changed-files@v44
         with:
           files: 'debian/changelog'
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          sparse-checkout: debian/changelog
+          sparse-checkout-cone-mode: false
       - name: Setup Debug Session
         uses: csexton/debugger-action@master
       - name: Check Version
