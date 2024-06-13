@@ -79,5 +79,5 @@ jobs:
         uses: csexton/debugger-action@master
       - name: Check Version
         if: ${{ steps.changed-files.outputs.all_changed_files != '' }}
-        run: bash ".github/workflows/version-check.bash"
+        run: bash "../.github/workflows/version-check.bash"
         working-directory: ./tools
