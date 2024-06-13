@@ -74,8 +74,10 @@ jobs:
           ref: ${{ github.event.pull_request.head.sha }}
           sparse-checkout: debian/changelog
           sparse-checkout-cone-mode: false
+          path: tools
       - name: Setup Debug Session
         uses: csexton/debugger-action@master
       - name: Check Version
         if: ${{ steps.changed-files.outputs.all_changed_files != '' }}
         run: bash ".github/workflows/version-check.bash"
+        working-directory: ./tools
