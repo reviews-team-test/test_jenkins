@@ -29,16 +29,15 @@ jobs:
         run: |
           echo "$diff_patch" | while IFS= read -r line
           do
-            echo "处理行: $line"
             for key in $check_keys
             do
               if [[ $line == *"$key"* ]]; then
-                echo "$line:$key" >> diff.log
+                echo "处理行: $line; 敏感词: $key" >> diff.log
               fi
             done
           done
           if [ -s "diff.log" ]; then
-            echo "检测到存在敏感词"
+            echo "检测到存在敏感词:"
             cat diff.log
             exit 1
           fi
