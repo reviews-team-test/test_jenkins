@@ -19,7 +19,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          fetch-depth: 0
+          ref: ${{ github.event.pull_request.head.sha }}
       - id: git-full-diff
         uses: fernandosmither/git-full-diff@v1.0.2
       - name: filter keys and display
