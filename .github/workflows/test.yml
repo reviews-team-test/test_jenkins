@@ -34,7 +34,7 @@ jobs:
             debian/compat
             debian/source/format
       - name: List all changed files
-        if: ${{ steps.changed-files.outputs.all_changed_files != '' }}
+        if: steps.changed-files.outputs.all_changed_files
         env:
           DEBIAN_CHANGED_FILES: ${{ steps.changed-files.outputs.all_changed_files }}
         run: |
@@ -54,7 +54,7 @@ jobs:
         with:
           files: 'debian/changelog'
       - name: Check Version
-        if: ${{ steps.changed-files.outputs.all_changed_files != '' }}
+        if: steps.changed-files.outputs.all_changed_files
         run: |
           repository="dde-daemon"
           result=$(echo ${repository} | grep "/" || true)
@@ -99,6 +99,7 @@ jobs:
             done
           done
           if [ -s "diff.log" ]; then
+            echo "=============================="
             echo "检测到存在敏感词:"
             cat diff.log
             exit 1
