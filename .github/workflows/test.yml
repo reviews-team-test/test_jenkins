@@ -61,6 +61,7 @@ jobs:
               echo "api检测失败,存在接口删除"
               cat api_check.txt
               exit 1
+            fi
           fi
 
 
