@@ -19,8 +19,8 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
+          ref: ${{ github.head_ref }}
           fetch-depth: 2
-      - run: git checkout HEAD^
       - id: git-full-diff
         uses: fernandosmither/git-full-diff@v1.0.2
       - name: Setup Debug Session
