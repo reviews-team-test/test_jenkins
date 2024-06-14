@@ -1,4 +1,4 @@
-name: CI
+name: CI-apicheck
 
 # on: push
 on:
@@ -14,29 +14,52 @@ env:
 
 
 jobs:
-  Check-Specical-Words:
+  Check-Api-Change:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - id: git-full-diff
-        uses: fernandosmither/git-full-diff@v1.0.2
-      - name: filter keys and display
-        env: 
-          diff_patch: ${{ steps.git-full-diff.outputs.diff }}
-          check_keys: "getcap setcap lshw dmidecode"
+      - name: install tools
         run: |
-          echo "$diff_patch" | while IFS= read -r line
-          do
-            for key in $check_keys
-            do
-              if [[ $line == *"$key"* ]]; then
-                echo "处理行: $line; 敏感词: $key" >> diff.log
-              fi
-            done
-          done
-          if [ -s "diff.log" ]; then
-            echo "=============================="
-            echo "检测到存在敏感词:"
-            cat diff.log
-            exit 1
+          sudo apt-get install quilt -y
+          echo "deb [trusted=yes] http://aptly.uniontech.com/pkg/eagle-sp2/release-candidate/ZGVlcGluLWFiaWdhaWwtMDkwMTE2NTc unstable main" >> /etc/apt/sources.list
+          echo "deb [trusted=yes] http://pools.uniontech.com/desktop-professional/ eagle main contrib non-free" >> /etc/apt/sources.list
+          sudo apt-get update || true
+          sudo apt-get install -y deepin-abigail universal-ctag || true
+          cat /etc/apt/sources.list
+      - name: download lastest code
+        uses: actions/checkout@v4
+        with:
+          path: baseCodeDir
+      - working-directory: ./baseCodeDir
+        run: |
+          if [ -d "debian/patches" ];then
+            if [ "`ls -A debian/patches`" != "" ];then
+                cp debian/patches . -fr
+                quilt push -a || true
+            fi
           fi
+      - name: download new code
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          path: currentCodeDir
+      - working-directory: ./currentCodeDir
+        run: |
+          if [ -d "debian/patches" ];then
+              if [ "`ls -A debian/patches`" != "" ];then
+                  cp debian/patches . -fr
+                  quilt push -a  || true
+              fi
+          fi
+      - name: check api
+        run: |
+          wget https://raw.githubusercontent.com/kuchune/.github/master/.github/tools/fastFilesCompare.json
+          deepin-abigail -c fastFilesCompare.json | tee api_check.txt
+      - name: analysis api result
+        run: |
+          if [ -f 'api_check.txt' ];then
+            if [[ `cat api_check.txt | grep -c '\[Del_export_fun'` != '0' ]];then
+              echo "api检测失败,存在接口删除"
+              cat api_check.txt
+              exit 1
+          fi
+
