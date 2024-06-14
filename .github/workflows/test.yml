@@ -14,7 +14,68 @@ env:
 
 
 jobs:
-  filter-keys:
+  Check-Debian-Prefix:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+      - name: Get changed files
+        id: changed-files
+        uses: tj-actions/changed-files@v44
+        with:
+          files: 'debian/**'
+          files_ignore: |
+            debian/patches/*
+            debian/manpage.*
+            debian/*.manpages
+            debian/changelog
+            debian/copyright
+            debian/compat
+            debian/source/format
+      - name: List all changed files
+        if: ${{ steps.changed-files.outputs.all_changed_files != '' }}
+        env:
+          DEBIAN_CHANGED_FILES: ${{ steps.changed-files.outputs.all_changed_files }}
+        run: |
+          if [ ! -z ${DEBIAN_CHANGED_FILES} ]; then
+            echo "list all debian files that have changed: $DEBIAN_CHANGED_FILES"
+            exit 1
+          fi
+  Check-Version-Check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+      - name: Get changed files
+        id: changed-files
+        uses: tj-actions/changed-files@v44
+        with:
+          files: 'debian/changelog'
+      - name: Check Version
+        if: ${{ steps.changed-files.outputs.all_changed_files != '' }}
+        run: |
+          repository="dde-daemon"
+          result=$(echo ${repository} | grep "/" || true)
+          project_tmp=${repository}
+          if [[ "$result" != "" ]]; then
+              project_tmp=$(echo ${repository} | awk -F'/' '{print $2}' || true)
+          fi
+          version_str=$(dpkg-parsechangelog -l debian/changelog -n 2|grep ${project_tmp}|awk -F'[()]' '{print $2}'|grep -v '^$\|^Task\|^Bug\|^Influence'|tr '\n' ' '|| true)
+          version_num=$(echo $version_str|awk '{print NF}' || true)
+          echo "version_str is ${version_str}"
+          echo "version_num is ${version_num}"
+          if [[ "$version_num" == "2" ]]; then
+              version0=$(echo $version_str|awk '{print $1}' || true)
+              version1=$(echo $version_str|awk '{print $2}' || true)
+              check_result=$(dpkg --compare-versions ${version0} gt ${version1} && echo true || echo false)
+              if [[ "$check_result" == "false" ]];then
+                  echo $version_str
+                  exit 1
+              fi
+          fi
+  Check-Specical-Words:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -23,8 +84,6 @@ jobs:
           fetch-depth: 2
       - id: git-full-diff
         uses: fernandosmither/git-full-diff@v1.0.2
-      - name: Setup Debug Session
-        uses: csexton/debugger-action@master
       - name: filter keys and display
         env: 
           diff_patch: ${{ steps.git-full-diff.outputs.diff }}
