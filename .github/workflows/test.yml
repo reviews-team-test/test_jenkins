@@ -20,8 +20,8 @@ jobs:
       - name: install tools
         run: |
           sudo apt-get install quilt -y
-          echo "deb [trusted=yes] http://aptly.uniontech.com/pkg/eagle-sp2/release-candidate/ZGVlcGluLWFiaWdhaWwtMDkwMTE2NTc unstable main" >> /etc/apt/sources.list
-          echo "deb [trusted=yes] http://pools.uniontech.com/desktop-professional/ eagle main contrib non-free" >> /etc/apt/sources.list
+          echo "deb [trusted=yes] http://aptly.uniontech.com/pkg/eagle-sp2/release-candidate/ZGVlcGluLWFiaWdhaWwtMDkwMTE2NTc unstable main" | sudo tee -a/etc/apt/sources.list
+          echo "deb [trusted=yes] http://pools.uniontech.com/desktop-professional/ eagle main contrib non-free" | sudo tee -a /etc/apt/sources.list
           sudo apt-get update || true
           sudo apt-get install -y deepin-abigail universal-ctag || true
           cat /etc/apt/sources.list
