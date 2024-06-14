@@ -3,7 +3,7 @@ dde-daemon (5.15.13.1) unstable; urgency=medium
   [ Deepin Packages Builder ]
   * fix: 监听飞行模式和WIFI状态改变时使用定时显示OSD(Bug: 189383)(Influence: 显示飞行模式OSD时不显示WIFI连接OSD)
   * chore: 增加lastore日志(Influence: 日志)
-  * fix: 修复播放器无法暂停导致lshw音频服务阻问(Bug: 198489)(Influence: 声音)
+  * fix: 修复播放器无法暂停导lshw音频服务阻问(Bug: 198489)(Influence: 声音)
   * fix: dconfig类型默认为float64，直转化成uint32会导致崩溃(Influence: dde-session-daemon崩溃)
 
  -- Deepin Packages Builder <packages@deepin.org>  Tue, 13 Jun 2023 10:57:33 +0800
