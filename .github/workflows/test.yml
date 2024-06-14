@@ -52,14 +52,10 @@ jobs:
         run: |
           wget https://raw.githubusercontent.com/kuchune/.github/master/.github/tools/fastFilesCompare.json
           deepin-abigail -c fastFilesCompare.json | tee api_check.txt
-      - name: analysis api result
-        run: |
           if [ -e 'api_check.txt' ];then
+            cat api_check.txt
             if [ `cat api_check.txt | grep -c '\[Del_export_fun'` != '0' ];then
               echo "api检测失败,存在接口删除"
-              cat api_check.txt
               exit 1
             fi
           fi
-
-
