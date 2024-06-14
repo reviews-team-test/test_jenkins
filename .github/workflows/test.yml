@@ -20,7 +20,8 @@ jobs:
       - name: install tools
         run: |
           sudo apt-get install quilt -y
-          wget https://raw.githubusercontent.com/kuchune/.github/master/.github/tools/deepin-abigail
+          sudo curl -o /usr/bin/deepin-abigail https://raw.githubusercontent.com/kuchune/.github/master/.github/tools/deepin-abigail
+          sudo chmod +x /usr/bin/deepin-abigail
           sudo apt-get install universal-ctags -y || true
       - name: download lastest code
         uses: actions/checkout@v4
