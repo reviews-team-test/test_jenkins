@@ -14,90 +14,31 @@ env:
 
 
 jobs:
-  hello_world_job:
+  filter-keys:
     runs-on: ubuntu-latest
-    name: A job to say hello
     steps:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
       - id: git-full-diff
         uses: fernandosmither/git-full-diff@v1.0.2
-      - name: display diff
+      - name: filter keys and display
         env: 
           diff_patch: ${{ steps.git-full-diff.outputs.diff }}
+          check_keys: "getcap setcap lshw dmidecode"
         run: |
           echo "$diff_patch" | while IFS= read -r line
           do
             echo "处理行: $line"
-          done
-          echo ${{ github.repository }}
-  Check-Debian-Prefix:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          ref: ${{ github.event.pull_request.head.sha }}
-      - name: Get changed files
-        id: changed-files
-        uses: tj-actions/changed-files@v44
-        with:
-          files: 'debian/**'
-          files_ignore: |
-            debian/patches/*
-            debian/manpage.*
-            debian/*.manpages
-            debian/changelog
-            debian/copyright
-            debian/compat
-            debian/source/format
-      - name: List all changed files
-        if: ${{ steps.changed-files.outputs.all_changed_files != '' }}
-        env:
-          DEBIAN_CHANGED_FILES: ${{ steps.changed-files.outputs.all_changed_files }}
-        run: |
-          if [ ! -z ${DEBIAN_CHANGED_FILES} ]; then
-            echo "list all debian files that have changed: $DEBIAN_CHANGED_FILES"
-            exit 1
-          fi
-  Check-Version-Check:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          ref: ${{ github.event.pull_request.head.sha }}
-      - name: Get changed files
-        id: changed-files
-        uses: tj-actions/changed-files@v44
-        with:
-          files: 'debian/changelog'
-      - name: List all changed files
-        if: ${{ steps.changed-files.outputs.all_changed_files != '' }}
-        env:
-          DEBIAN_CHANGED_FILES: ${{ steps.changed-files.outputs.all_changed_files }}
-        run: |
-          if [ ! -z ${DEBIAN_CHANGED_FILES} ]; then
-            echo "list all debian files that have changed: $DEBIAN_CHANGED_FILES"
-          fi
-      - name: Check Version
-        if: ${{ steps.changed-files.outputs.all_changed_files != '' }}
-        run: |
-          repository="dde-daemon"
-          result=$(echo ${repository} | grep "/" || true)
-          project_tmp=${repository}
-          if [[ "$result" != "" ]]; then
-              project_tmp=$(echo ${repository} | awk -F'/' '{print $2}' || true)
-          fi
-          version_str=$(dpkg-parsechangelog -l debian/changelog -n 2|grep ${project_tmp}|awk -F'[()]' '{print $2}'|grep -v '^$\|^Task\|^Bug\|^Influence'|tr '\n' ' '|| true)
-          version_num=$(echo $version_str|awk '{print NF}' || true)
-          echo "version_str is ${version_str}"
-          echo "version_num is ${version_num}"
-          if [[ "$version_num" == "2" ]]; then
-              version0=$(echo $version_str|awk '{print $1}' || true)
-              version1=$(echo $version_str|awk '{print $2}' || true)
-              check_result=$(dpkg --compare-versions ${version0} gt ${version1} && echo true || echo false)
-              if [[ "$check_result" == "false" ]];then
-                  echo $version_str
-                  exit 1
+            for key in $check_keys
+            do
+              if [[ $line == *"$key"* ]]; then
+                echo "$line:$key" >> diff.log
               fi
+            done
+          done
+          if [ -s "diff.log" ]; then
+            echo "检测到存在敏感词"
+            cat diff.log
+            exit 1
           fi
