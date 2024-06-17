@@ -8,12 +8,12 @@ permissions:
   contents: read
   checks: read
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   debian-check:
-    uses: kuchune/.github/.github/workflows/debian-check.yml@master
-    secrets:
-      access_token: ${{ secrets.GITHUB_TOKEN }}
+    uses: linuxdeepin/.github/.github/workflows/debian-check.yml@master
     with:
       job_name: "debian-check"
-      repository: ${{ github.repository }}
-    
