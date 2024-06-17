@@ -22,7 +22,7 @@ jobs:
           ref: ${{ github.event.pull_request.head.sha }}
       - name: Get All Shell Files
         id: changed-shell-files
-        uses: SkyHighGrowth/changed-files@v42
+        uses: SkyHighGrowth/gha-changed-files@v1.0.1
         with:
           files: |
              **.sh
