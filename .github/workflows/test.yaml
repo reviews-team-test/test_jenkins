@@ -27,6 +27,13 @@ jobs:
           files: |
              **.sh
              **.bash
+      - name: List all changed files
+        env:
+            ALL_CHANGED_FILES: ${{ steps.changed-shell-files.outputs.all_changed_files }}
+        run: |
+            for file in ${ALL_CHANGED_FILES}; do
+                echo "$file was changed"
+            done
       - name: Static Check with sh
         if: steps.changed-shell-files.outputs.all_changed_files 
         uses: ludeeus/action-shellcheck@master
