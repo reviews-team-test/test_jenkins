@@ -1,0 +1,38 @@
+name: staticCheck
+on:
+  pull_request_target:
+    types: [opened, synchronize, reopened]
+
+permissions:
+  contents: read
+  pull-requests: read
+  checks: write
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+
+jobs:
+  Static-Check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+      - name: Get All Shell Files
+        id: changed-shell-files
+        uses: SkyHighGrowth/changed-files@v42
+        with:
+          files: |
+             **.sh
+             **.bash
+      - name: Static Check with sh
+        if: steps.changed-shell-files.outputs.all_changed_files 
+        uses: ludeeus/action-shellcheck@master
+        with:
+          additional_files: ${{ steps.changed-shell-files.outputs.all_changed_files }}
+          severity: error
+          check_together: 'yes'
+          format: tty
+
