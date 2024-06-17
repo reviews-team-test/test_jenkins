@@ -38,7 +38,7 @@ jobs:
         if: steps.changed-shell-files.outputs.all_changed_files 
         uses: ludeeus/action-shellcheck@master
         with:
-          additional_files: ${{ steps.changed-shell-files.outputs.all_changed_files }}
+          additional_files: "${{ steps.changed-shell-files.outputs.all_changed_files }}"
           severity: error
           check_together: 'yes'
           format: tty
