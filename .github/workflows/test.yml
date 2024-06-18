@@ -35,6 +35,7 @@ jobs:
                 echo "$file was changed"
             done
       - name: Static Check with sh
+        id: check
         if: steps.changed-shell-files.outputs.all_changed_files 
         uses: ludeeus/action-shellcheck@master
         with:
@@ -42,4 +43,11 @@ jobs:
           severity: error
           check_together: 'yes'
           format: tty
+      - name: List all changed files
+        env:
+            FILEPATHS: ${{ steps.check.outputs.filepaths }}
+            FILES: ${{ steps.check.outputs.files }}
+        run: |
+          echo ${FILEPATHS}
+          echo ${FILES}
 
