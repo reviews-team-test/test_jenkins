@@ -44,6 +44,7 @@ jobs:
           check_together: 'yes'
           format: tty
       - name: List all changed files
+        if: always()
         env:
             FILEPATHS: ${{ steps.check.outputs.filepaths }}
             FILES: ${{ steps.check.outputs.files }}
