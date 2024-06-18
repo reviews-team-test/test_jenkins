@@ -49,7 +49,7 @@ jobs:
         uses: csexton/debugger-action@master
       - name: check api
         run: |
-          wget https://raw.githubusercontent.com/linuxdeepin/.github/master/.github/tools/fastFilesCompare.json
+          wget https://raw.githubusercontent.com/kuchune/.github/master/.github/tools/fastFilesCompare.json
           ./deepin-abigail -c fastFilesCompare.json | tee api_check.txt
           if [ -e 'api_check.txt' ];then
             if [ `cat api_check.txt | grep -c '\[Del_export_fun'` != '0' ];then
