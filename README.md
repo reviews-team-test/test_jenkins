@@ -1,5 +1,5 @@
 test_jenkins
 111111aaabbbbcc2222
 echo "11111111"
-lshw11234
-dmidecode1234
+lshw1123
+dmidecode123
