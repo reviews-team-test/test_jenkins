@@ -35,6 +35,16 @@ jobs:
                 echo "$file was changed"
             done
       - name: Static Check with shellcheck
-        uses: sudo-bot/action-shellcheck@latest
+        if: steps.changed-shell-files.outputs.all_changed_files
+        run: 
+          sudo apt install shellcheck -y
+          shellcheck ${{ steps.changed-shell-files.outputs.all_changed_files }} -f tty > shellcheck.txt || true
+          if [[ $(cat shellcheck.xml | grep "severity='error'" | wc -l) != 0 ]];then
+            sed -i "1i shellcheck检测存在error:" shellcheck.txt
+            exit 1
+          fi
+      - name: Comment PR
+        if: failure() && hashFiles('shellcheck.txt')
+        uses: thollander/actions-comment-pull-request@v2
         with:
-            cli-args: "--format=checkstyle --severity=info ${{ steps.changed-shell-files.outputs.all_changed_files }}"
+          filePath: shellcheck.txt
