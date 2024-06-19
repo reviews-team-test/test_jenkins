@@ -1,4 +1,4 @@
-name: staticCheck
+name: debianCheck
 on:
   pull_request_target:
     types: [opened, synchronize, reopened]
@@ -14,24 +14,29 @@ concurrency:
 
 
 jobs:
-  Static-Check:
+  debian-Check:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-        with:
-          ref: ${{ github.event.pull_request.head.sha }}
-      - name: Get All Shell Files
-        id: changed-shell-files
-        uses: SkyHighGrowth/gha-changed-files@v1.0.1
-        with:
-          files: |
-             **.sh
-             **.bash
-      - name: Static Check with shellcheck
-        id: check
-        if: steps.changed-shell-files.outputs.all_changed_files 
-        uses: ludeeus/action-shellcheck@master
-        with:
-          additional_files: ${{ steps.changed-shell-files.outputs.all_changed_files }}
-          severity: error
-          format: tty
+      - id: git-full-diff
+        uses: fernandosmither/git-full-diff@v1.0.2
+      - name: filter keys and display
+        env:
+          diff_patch: ${{ steps.git-full-diff.outputs.diff }}
+          check_keys: "getcap setcap lshw dmidecode"
+        run: |
+          echo "$diff_patch" | while IFS= read -r line
+          do
+            for key in $check_keys
+            do
+              if [[ $line == *"$key"* ]]; then
+                echo "处理行: $line; 敏感词: $key" >> diff.txt
+              fi
+            done
+          done
+          if [ -s "diff.txt" ]; then
+            echo "=============================="
+            echo "检测到存在敏感词:"
+            cat diff.txt
+            exit 1
+          fi
