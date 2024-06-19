@@ -28,22 +28,10 @@ jobs:
              **.sh
              **.bash
       - name: Static Check with shellcheck
-        if: steps.changed-shell-files.outputs.all_changed_files
-        env:
-          ALL_CHANGED_FILES: ${{ steps.changed-shell-files.outputs.all_changed_files }}
-        run: |
-          sudo apt-get install shellcheck -y
-          shellcheck ${ALL_CHANGED_FILES} -f checkstyle > shellcheck.xml || true
-          if [ -e 'shellcheck.xml' ];then
-            error_num=$(cat shellcheck.xml | grep "severity='error'" | wc -l)
-            if [ "$error_num" != "0" ];then
-              echo "shellcheck检测存在$error_num个error"
-              exit 1
-            fi
-          fi
-      - name: Publish reports
-        if: failure() && hashFiles('shellcheck.xml')
-        uses: actions/upload-artifact@v2
+        id: check
+        if: steps.changed-shell-files.outputs.all_changed_files 
+        uses: ludeeus/action-shellcheck@master
         with:
-          name: shell-report
-          path: shellcheck.xml
+          additional_files: ${{ steps.changed-shell-files.outputs.all_changed_files }}
+          severity: error
+          format: tty
