@@ -41,7 +41,6 @@ jobs:
         with:
           additional_files: "${{ steps.changed-shell-files.outputs.all_changed_files }}"
           severity: error
-          check_together: 'yes'
           format: tty
       - name: List all changed files
         if: always()
