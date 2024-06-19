@@ -17,7 +17,7 @@ jobs:
   Static-Check:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           ref: ${{ github.event.pull_request.head.sha }}
       - name: Get All Shell Files
@@ -35,13 +35,15 @@ jobs:
           sudo apt-get install shellcheck -y
           shellcheck ${ALL_CHANGED_FILES} -f checkstyle > shellcheck.xml || true
           if [ -e 'shellcheck.xml' ];then
-            if [ `cat shellcheck.xml | grep -c "severity='error'"` != '0' ];then
-              sed -i "1i shellcheck检测存在error:" shellcheck.xml
+            error_num=$(cat shellcheck.xml | grep "severity='error'" | wc -l)
+            if [ "$error_num" != "0" ];then
+              echo "shellcheck检测存在$error_num个error"
               exit 1
             fi
           fi
-      - name: Comment PR
+      - name: Publish reports
         if: failure() && hashFiles('shellcheck.xml')
-        uses: thollander/actions-comment-pull-request@v2
+        uses: actions/upload-artifact@v2
         with:
-          filePath: shellcheck.xml
+          name: shell-report
+          path: shellcheck.xml
