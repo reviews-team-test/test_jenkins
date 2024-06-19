@@ -17,20 +17,12 @@ jobs:
   debian-Check:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-      - uses: GrantBirki/git-diff-action@main
+      - name: Generate Changed Filenames
         id: git-diff-action
+        uses: swaglive/action-git-diff@main
         with:
-          json_diff_file_output: diff.json
-          raw_diff_file_output: diff.txt
-          file_output_only: "true"
+          head-ref: ${{ github.event.pull_request.head.sha || github.event.after || 'HEAD' }}
       - name: print json diff
         env:
-          DIFF: ${{ steps.git-diff-action.outputs.json-diff-path }}
-        run: cat $DIFF
-      - name: print raw diff
-        env:
-          DIFF: ${{ steps.git-diff-action.outputs.raw-diff-path }}
-        run: cat $DIFF
+          DIFF: ${{ steps.git-diff-action.outputs.json }}
+        run: echo $DIFF
