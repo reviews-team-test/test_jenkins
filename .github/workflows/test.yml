@@ -20,6 +20,10 @@ jobs:
       - uses: actions/checkout@v4
       - id: git-full-diff
         uses: fernandosmither/git-full-diff@v1.0.2
+        with:
+          fetch-depth: 0
+      - name: Setup Debug Session
+        uses: csexton/debugger-action@master
       - name: filter keys and display
         env:
           diff_patch: ${{ steps.git-full-diff.outputs.diff }}
