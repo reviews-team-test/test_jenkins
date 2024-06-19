@@ -18,7 +18,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Check PR
+        id: get-git-diff
         uses: jsoares/gh-pr-content-checker@master
         with:
           github-token: ${{ github.token }}
           diffDoesNotContain: "dmidecode lshw"
+      - run: echo $diff
+        env:
+         diff: ${{ steps.get-git-diff.outputs.diff }}
