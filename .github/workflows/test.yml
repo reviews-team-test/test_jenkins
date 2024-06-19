@@ -20,27 +20,17 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
-      - id: git-full-diff
-        uses: fernandosmither/git-full-diff@v1.0.2
-      - name: Setup Debug Session
-        uses: csexton/debugger-action@master
-      - name: filter keys and display
+      - uses: GrantBirki/git-diff-action@vX.X.X
+        id: git-diff-action
+        with:
+          json_diff_file_output: diff.json
+          raw_diff_file_output: diff.txt
+          file_output_only: "true"
+      - name: print json diff
         env:
-          diff_patch: ${{ steps.git-full-diff.outputs.diff }}
-          check_keys: "getcap setcap lshw dmidecode"
-        run: |
-          echo "$diff_patch" | while IFS= read -r line
-          do
-            for key in $check_keys
-            do
-              if [[ $line == *"$key"* ]]; then
-                echo "处理行: $line; 敏感词: $key" >> diff.txt
-              fi
-            done
-          done
-          if [ -s "diff.txt" ]; then
-            echo "=============================="
-            echo "检测到存在敏感词:"
-            cat diff.txt
-            exit 1
-          fi
+          DIFF: ${{ steps.git-diff-action.outputs.json-diff-path }}
+        run: cat $DIFF
+      - name: print raw diff
+        env:
+          DIFF: ${{ steps.git-diff-action.outputs.raw-diff-path }}
+        run: cat $DIFF
