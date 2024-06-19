@@ -38,15 +38,15 @@ jobs:
         if: steps.changed-shell-files.outputs.all_changed_files
         run: 
           sudo apt install shellcheck -y
-          shellcheck ${{ steps.changed-shell-files.outputs.all_changed_files }} -f tty > shellcheck.txt || true
-          if [ -e 'shellcheck.txt' ];then
-            if [ $(cat shellcheck.txt | grep "severity='error'" | wc -l) != '0' ];then
-              sed -i "1i shellcheck检测存在error:" shellcheck.txt
+          shellcheck ${{ steps.changed-shell-files.outputs.all_changed_files }} -f checkstyle > shellcheck.xml || true
+          if [ -e 'shellcheck.xml' ];then
+            if [ `cat shellcheck.xml | grep -c "severity='error'"` != '0' ];then
+              sed -i "1i shellcheck检测存在error:" shellcheck.xml
               exit 1
             fi
           fi
       - name: Comment PR
-        if: failure() && hashFiles('shellcheck.txt')
+        if: failure() && hashFiles('shellcheck.xml')
         uses: thollander/actions-comment-pull-request@v2
         with:
-          filePath: shellcheck.txt
+          filePath: shellcheck.xml
