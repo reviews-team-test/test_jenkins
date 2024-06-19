@@ -19,5 +19,6 @@ jobs:
     steps:
       - name: Check PR
         uses: jsoares/gh-pr-content-checker@master
-        with:     
+        with:
+          github-token: ${{ github.token }}
           diffDoesNotContain: "dmidecode lshw"
