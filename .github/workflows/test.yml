@@ -20,7 +20,7 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
-      - uses: GrantBirki/git-diff-action@vX.X.X
+      - uses: GrantBirki/git-diff-action@main
         id: git-diff-action
         with:
           json_diff_file_output: diff.json
