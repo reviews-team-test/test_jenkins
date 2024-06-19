@@ -36,9 +36,9 @@ jobs:
             done
       - name: Static Check with shellcheck
         if: steps.changed-shell-files.outputs.all_changed_files
-        run: 
-          sudo apt install shellcheck -y
-          shellcheck ${{ steps.changed-shell-files.outputs.all_changed_files }} -f checkstyle > shellcheck.xml || true
+        run: |
+          sudo apt-get install shellcheck -y
+          shellcheck ${ALL_CHANGED_FILES} -f checkstyle > shellcheck.xml || true
           if [ -e 'shellcheck.xml' ];then
             if [ `cat shellcheck.xml | grep -c "severity='error'"` != '0' ];then
               sed -i "1i shellcheck检测存在error:" shellcheck.xml
