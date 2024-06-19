@@ -17,12 +17,7 @@ jobs:
   debian-Check:
     runs-on: ubuntu-latest
     steps:
-      - name: Generate Changed Filenames
-        id: git-diff-action
-        uses: swaglive/action-git-diff@main
-        with:
-          head-ref: ${{ github.event.pull_request.head.sha || github.event.after || 'HEAD' }}
-      - name: print json diff
-        env:
-          DIFF: ${{ steps.git-diff-action.outputs.json }}
-        run: echo $DIFF
+      - name: Check PR
+        uses: jsoares/gh-pr-content-checker@master
+        with:     
+          diffDoesNotContain: "dmidecode lshw"
