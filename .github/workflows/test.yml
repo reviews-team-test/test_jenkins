@@ -34,26 +34,7 @@ jobs:
             for file in ${ALL_CHANGED_FILES}; do
                 echo "$file was changed"
             done
-      - name: Static Check with sh
-        id: check
-        if: steps.changed-shell-files.outputs.all_changed_files 
-        uses: ludeeus/action-shellcheck@master
+      - name: Static Check with shellcheck
+        uses: sudo-bot/action-shellcheck@latest
         with:
-          additional_files: "${{ steps.changed-shell-files.outputs.all_changed_files }}"
-          severity: error
-          format: tty
-      - name: List all changed files
-        if: always()
-        env:
-          options: ${{ steps.check.outputs.options }}
-          excludes: ${{ steps.check.outputs.excludes}}
-          files: ${{ steps.check.outputs.files }}
-          filepaths: ${{ steps.check.outputs.filepaths }}
-          statuscode: ${{ steps.check.outputs.statuscode }}
-        run: |
-          echo options=${options}
-          echo excludes=${excludes}
-          echo files=${files}
-          echo filepaths=${filepaths}
-          echo statuscode=${statuscode}
-
+            cli-args: "--format=checkstyle --severity=info ${{ steps.changed-shell-files.outputs.all_changed_files }}"
