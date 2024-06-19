@@ -46,9 +46,15 @@ jobs:
       - name: List all changed files
         if: always()
         env:
-            FILEPATHS: ${{ steps.check.outputs.filepaths }}
-            FILES: ${{ steps.check.outputs.files }}
+          options: ${{ steps.check.outputs.options }}
+          excludes: ${{ steps.check.outputs.excludes}}
+          files: ${{ steps.check.outputs.files }}
+          filepaths: ${{ steps.check.outputs.filepaths }}
+          statuscode: ${{ steps.check.outputs.statuscode }}
         run: |
-          echo ${FILEPATHS}
-          echo ${FILES}
+          echo options=${options}
+          echo excludes=${excludes}
+          echo files=${files}
+          echo filepaths=${filepaths}
+          echo statuscode=${statuscode}
 
