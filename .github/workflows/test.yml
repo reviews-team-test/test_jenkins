@@ -17,12 +17,27 @@ jobs:
   debian-Check:
     runs-on: ubuntu-latest
     steps:
-      - name: Check PR
+      - name: Generate Changed Filenames
         id: get-git-diff
-        uses: jsoares/gh-pr-content-checker@master
+        uses: swaglive/action-git-diff@main
         with:
-          github-token: ${{ github.token }}
-          diffDoesNotContain: "dmidecode lshw"
-      - run: echo $diff
+          head-ref: ${{ github.event.pull_request.head.sha || github.event.after || 'HEAD' }}
+          base-ref: ${{ github.event.pull_request.base.sha || github.event.before || 'HEAD~1' }}
+      - uses: actions/checkout@v4
+        with:
+          repository: kuchune/check-tools
+          sparse-checkout: debianCheck/do-with-data.py
+          sparse-checkout-cone-mode: false
+      - name: Setup Debug Session
+        uses: csexton/debugger-action@master
+      - run: |
+          python3 do-with-data.py ${check-type} ${check-keys} ${diff-str} 
         env:
-         diff: ${{ steps.get-git-diff.outputs.diff }}
+          diff-str: ${{ steps.get-git-diff.outputs.json }}
+          check-keys: "getcap setcap lshw dmidecode"
+          check-type: "modify"
+
+
+
+
+      
