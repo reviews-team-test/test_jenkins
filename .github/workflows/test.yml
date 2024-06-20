@@ -28,6 +28,7 @@ jobs:
           repository: kuchune/check-tools
           sparse-checkout: debianCheck/do-with-data.py
           sparse-checkout-cone-mode: false
+          path: ./
       - name: Setup Debug Session
         uses: csexton/debugger-action@master
       - run: |
