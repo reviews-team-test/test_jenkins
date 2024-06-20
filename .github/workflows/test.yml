@@ -30,16 +30,16 @@ jobs:
           sparse-checkout: debianCheck/do-with-data.py
           sparse-checkout-cone-mode: false
       - run: |
-          python3 debianCheck/do-with-data.py ${check-type} ${check-keys} fetch-api-data-action/data.json
+          python3 debianCheck/do-with-data.py ${check_type} ${check_keys} fetch-api-data-action/data.json
         env:
-          check-type: modify
-          check-keys: 'getcap setcap lshw dmidecode'
+          check_type: modify
+          check_keys: 'getcap setcap lshw dmidecode'
       - name: Publish reports
-        if: always()
+        if: failure()
         uses: actions/upload-artifact@v2
         with:
-          name: response-json
-          path: fetch-api-data-action/data.json
+          name: response-log
+          path: result.json
 
 
 
