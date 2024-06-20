@@ -26,9 +26,11 @@ jobs:
           cat fetch-api-data-action/data.json || true
           echo ${fetchApiData}
       - run: |
-          print(f"fetchApiData is {type(fetchApiData)}")
+          import os
+          print(f"fetchApiData is {type(os.getenv('fetchApiData'))}")
         shell: python
       - uses: actions/checkout@v4
+        if: always()
         with:
           repository: kuchune/check-tools
           sparse-checkout: debianCheck/do-with-data.py
@@ -51,4 +53,4 @@ jobs:
 
 
 
-      
+    
