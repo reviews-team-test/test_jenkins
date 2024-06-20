@@ -32,8 +32,8 @@ jobs:
       - run: |
           python3 debianCheck/do-with-data.py ${check-type} ${check-keys} fetch-api-data-action/data.json
         env:
-          check-keys: "getcap setcap lshw dmidecode"
-          check-type: "modify"
+          check-type: modify
+          check-keys: 'getcap setcap lshw dmidecode'
       - name: Publish reports
         if: always()
         uses: actions/upload-artifact@v2
