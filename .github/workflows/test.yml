@@ -1,12 +1,9 @@
-name: test
+name: test-add-reviewer
 on:
   pull_request_target:
     types: [opened, synchronize, reopened]
 
-permissions:
-  contents: read
-  pull-requests: read
-  checks: write
+permissions: write-all
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
