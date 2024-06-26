@@ -19,7 +19,7 @@ jobs:
       - uses: ryaugusta/pr-add-reviewers-action@v1
         with:
           token: ${{ github.token }}
-          reviewers: 'kuchune'
+          reviewers: ckux
 
 
 
