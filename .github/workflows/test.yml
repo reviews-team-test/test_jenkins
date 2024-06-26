@@ -29,9 +29,12 @@ jobs:
           repository: kuchune/check-tools
           sparse-checkout: debianCheck/do-with-data.py
           path: test2
-      - name: Setup Debug Session
-        if: always()
-        uses: csexton/debugger-action@master
+      - if: always()
+        run: |
+          echo "1111" > test
+          cat test
+
+        
 
 
 
