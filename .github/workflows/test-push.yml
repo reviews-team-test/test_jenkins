@@ -1,0 +1,37 @@
+name: test-push
+on: push
+
+permissions:
+  contents: read
+  pull-requests: read
+  checks: write
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+
+jobs:
+  debian-Check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          repository: kuchune/check-tools
+          sparse-checkout: do-with-data.py
+          sparse-checkout-cone-mode: false
+          path: test1
+      - uses: actions/checkout@v4
+        if: always()
+        with:
+          repository: kuchune/check-tools
+          sparse-checkout: debianCheck/do-with-data.py
+          path: test2
+      - name: Setup Debug Session
+        if: always()
+        uses: csexton/debugger-action@master
+
+
+
+
+    
