@@ -1,4 +1,4 @@
-kwin (4:5.27.2.202-deepin202-1) unstable; urgency=medium
+kwin (4:5.27.2.201-deepin202-1) unstable; urgency=medium
 
   [dingzhixuan]
   * fix: remove dock extend border
