@@ -1,3 +1,3 @@
 echo "lshw"
 echo "export"
-echo "11111111"
+echo "1111dmidecode"
