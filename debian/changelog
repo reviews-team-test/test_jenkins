@@ -3,7 +3,7 @@ kwin (4:5.27.2.201-deepin200-1) unstable; urgency=medium
   [dingzhixuan]
   * fix: remove dock extend border
   * fix: crash when maximize by using shortcut
-  * fix: dde-lock won't show when preview windows
+  * fix: dde-lock won't show when preview windows tes
   * fix: repair about window can't minimized
   * fix: kwin_wayland添加no-vt-switch参数
   * fix: optimized window param
