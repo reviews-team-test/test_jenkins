@@ -1,3 +1,3 @@
-echo "test2.bash"
-echo "2222"
+echo "lshw"
+echo "export"
 echo "11111111"
