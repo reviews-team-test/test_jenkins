@@ -1,4 +1,4 @@
-test_jenkins (4:5.27.2.202-deepin202-1) unstable; urgency=medium
+kwin (4:5.27.2.202-deepin202-1) unstable; urgency=medium
 
   [dingzhixuan]
   * fix: remove dock extend border
@@ -17,7 +17,7 @@ test_jenkins (4:5.27.2.202-deepin202-1) unstable; urgency=medium
 
  -- dingzhixuan <dingzhixuan@uniontech.com>  Wed, 15 May 2024 15:11:18 +0800
 
-test_jenkins (4:5.27.2.201-deepin201-1) unstable; urgency=medium
+kwin (4:5.27.2.201-deepin201-1) unstable; urgency=medium
 
   [dingzhixuan]
   * fix: Prevent multiple hiding cursor.
