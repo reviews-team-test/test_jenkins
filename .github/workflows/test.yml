@@ -1,26 +1,12 @@
-name: test-add-reviewer
+name: debianCheck
 on:
   pull_request_target:
     types: [opened, synchronize, reopened]
-
-permissions: write-all
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
-  debian-Check:
-    runs-on: ubuntu-latest
-    steps:
-      - run: |
-          echo "1111" > test
-          cat test
-      - uses: ryaugusta/pr-add-reviewers-action@v1
-        with:
-          token: ${{ github.token }}
-          reviewers: ckux
-
-
-
-    
+  debian-check:
+    uses: linuxdeepin/.github/.github/workflows/debian-check.yml@master
