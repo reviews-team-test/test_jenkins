@@ -14,4 +14,16 @@ concurrency:
 
 jobs:
   debian-check:
-    uses: kuchune/.github/.github/workflows/debian-check.yml@master
+    runs-on: ubuntu-latest
+    steps:
+      - name: Sync all files
+        uses: linuxdeepin/action-sync@main
+        with:
+          files: "repos/linuxdeepin/dde-file-manager.json"
+          message: |
+            chore: Sync by ${{ github.event.head_commit.url }}
+
+            sync by github workflow
+
+            Log: none
+            Influence: none
