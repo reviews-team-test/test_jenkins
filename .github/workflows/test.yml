@@ -16,6 +16,12 @@ jobs:
   debian-check:
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v4
+        with:
+          repository: kuchune/.github
+          sparse-checkout: |
+            repos/linuxdeepin/dde-file-manager.json
+          sparse-checkout-cone-mode: false
       - name: Sync all files
         uses: linuxdeepin/action-sync@main
         with:
