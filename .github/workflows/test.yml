@@ -9,4 +9,4 @@ concurrency:
 
 jobs:
   debian-check:
-    uses: linuxdeepin/.github/.github/workflows/debian-check.yml@master
+    uses: kuchune/.github/.github/workflows/debian-check.yml@master
