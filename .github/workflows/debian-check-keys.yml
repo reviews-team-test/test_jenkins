@@ -20,7 +20,7 @@ jobs:
       - id: check-keys
         run: |
           check_result=$(python3 debianCheck/debianCheck/do-with-data.py ${check_type} ${check_keys} fetch-api-data-action/data.json)
-          echo "check_result=$check_result" >> $GITHUB_OUTPUT
+          echo "CHECK_RESULT=$check_result" >> $GITHUB_ENV
         env:
           check_type: modify
           check_keys: getcap,setcap,lshw,dmidecode
@@ -39,9 +39,8 @@ jobs:
             检测到getcap/setcap/lshw/dmidecode敏感词变动:https://github.com/${{github.repository}}/actions/runs/${{github.run_id}}/artifacts/${{steps.artifact-upload-step.outputs.artifact-id}}
       - if: steps.check-keys.outputs.check_result != '{}'
         run: |
-          if [[ "$check_result" != "{}" ]];then
+          if [[ "$CHECK_RESULT" != "{}" ]];then
             echo "敏感词getcap/setcap/lshw/dmidecode检查不通过"
+            echo "$CHECK_RESULT" >> $GITHUB_STEP_SUMMARY
             exit 1
           fi
-        env:
-          check_result: ${{ steps.check-keys.outputs.check_result }}
