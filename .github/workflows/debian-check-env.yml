@@ -36,7 +36,7 @@ jobs:
         uses: thollander/actions-comment-pull-request@v2
         with:
           message: |
-            检测到export/unset敏感词变动:https://github.com/${{github.repository}}/actions/runs/${{ github.run_id }}/artifacts/${{steps.artifact-upload-step.outputs.artifact-id}}
+            检测到环境设置敏感词export/unset变动:https://github.com/${{github.repository}}/actions/runs/${{ github.run_id }}/artifacts/${{steps.artifact-upload-step.outputs.artifact-id}}
       - if: env.CHECK_RESULT == 'False'
         run: |
           echo "环境设置敏感词export/unset检查不通过"

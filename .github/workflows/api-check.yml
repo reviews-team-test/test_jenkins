@@ -48,14 +48,10 @@ jobs:
           if [ -e 'api_check.txt' ];then
             check_num=$(cat api_check.txt | grep -c '\[Del_export_fun' || true)
             echo "CHECK_NUM=$check_num" >> $GITHUB_ENV
-            echo "check_num is $check_num"
             if [ $check_num -gt 0 ];then
               sed -i '1i API接口检查检测到存在对外接口删除:' api_check.txt
-              echo "111111"
               exit 1
             fi
-            echo "2222"
-            echo "CHECK_NUM=1" >> $GITHUB_ENV
           fi
       - name: Comment PR
         if: always() && env.CHECK_NUM > 0
