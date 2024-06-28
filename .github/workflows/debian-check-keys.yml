@@ -4,6 +4,15 @@ on: workflow_call
 jobs:
   Check-Specical-Words:
     runs-on: ubuntu-latest
+    strategy:
+        matrix:
+          check_type: [modify, all]
+          check_keys: ["getcap,setcap,lshw,dmidecode", "export,unset"]
+          include:
+            - check_type: modify
+              check_keys: "getcap,setcap,lshw,dmidecode"
+            - check_type: all
+              check_keys: "export,unset"
     steps:
       - name: Fetch API Data
         uses: JamesIves/fetch-api-data-action@v2
@@ -22,8 +31,8 @@ jobs:
           check_result=$(python3 debianCheck/debianCheck/do-with-data.py ${check_type} ${check_keys} fetch-api-data-action/data.json)
           echo "CHECK_RESULT=$check_result" >> $GITHUB_ENV
         env:
-          check_type: modify
-          check_keys: getcap,setcap,lshw,dmidecode
+          check_type: ${{ matrix.check_type }}
+          check_keys: ${{ matrix.check_keys }}
       - name: Publish reports
         id: artifact-upload-step
         if: env.CHECK_RESULT == 'False'
