@@ -9,4 +9,4 @@ concurrency:
 
 jobs:
   static-check:
-    uses: ./.github/workflows/static-check.yml@main
+    uses: ./.github/workflows/static-check.yml

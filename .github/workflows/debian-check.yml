@@ -5,10 +5,10 @@ permissions: write-all
 
 jobs:
   call-debian-prefix-check:
-    uses: ./.github/workflows/debian-check-prefix.yml@main
+    uses: ./.github/workflows/debian-check-prefix.yml
   call-debian-version-check:
-    uses: ./.github/workflows/debian-check-version.yml@main
+    uses: ./.github/workflows/debian-check-version.yml
   call-specical-words-check:
-    uses: ./.github/workflows/debian-check-keys.yml@main
+    uses: ./.github/workflows/debian-check-keys.yml
   call-env-set-words-check:
-    uses: ./.github/workflows/debian-check-env.yml@main
+    uses: ./.github/workflows/debian-check-env.yml
