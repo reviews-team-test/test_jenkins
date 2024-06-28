@@ -25,6 +25,10 @@ jobs:
         env:
           check_type: modify
           check_keys: getcap,setcap,lshw,dmidecode
+      - run: |
+          echo "test_tmp is $test_tmp"
+        env:
+          test_tmp: ${{ github.env.CHECK_RESULT }}
       - name: Publish reports
         id: artifact-upload-step
         if: github.env.CHECK_RESULT == 'False'
