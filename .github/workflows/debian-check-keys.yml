@@ -6,12 +6,10 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
         matrix:
-          check_type: [modify, all]
-          check_keys: ["getcap,setcap,lshw,dmidecode", "export,unset"]
-          exclude:
-            - check_type: all
-              check_keys: "getcap,setcap,lshw,dmidecode"
+          include:
             - check_type: modify
+              check_keys: "getcap,setcap,lshw,dmidecode"
+            - check_type: all
               check_keys: "export,unset"
     steps:
       - name: Fetch API Data
