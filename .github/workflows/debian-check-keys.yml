@@ -26,19 +26,20 @@ jobs:
           check_keys: getcap,setcap,lshw,dmidecode
       - name: Publish reports
         id: artifact-upload-step
-        if: github.env.CHECK_RESULT != '{}'
+        if: github.env.CHECK_RESULT == 'False'
         uses: actions/upload-artifact@v4
         with:
           name: specical-words-check-report
           path: result.json
       - name: Comment PR
-        if: github.env.CHECK_RESULT != '{}'
+        if: github.env.CHECK_RESULT == 'False'
         uses: thollander/actions-comment-pull-request@v2
         with:
           message: |
             检测到getcap/setcap/lshw/dmidecode敏感词变动:https://github.com/${{github.repository}}/actions/runs/${{github.run_id}}/artifacts/${{steps.artifact-upload-step.outputs.artifact-id}}
-      - if: github.env.CHECK_RESULT != '{}'
+      - if: github.env.CHECK_RESULT == 'False'
         run: |
+          echo "CHECK_RESULT is $CHECK_RESULT"
           if [[ "$CHECK_RESULT" != "{}" ]];then
             echo "敏感词getcap/setcap/lshw/dmidecode检查不通过"
             exit 1
