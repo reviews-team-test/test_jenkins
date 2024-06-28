@@ -36,12 +36,12 @@ jobs:
           echo "CHECK_RESULT=$check_result" >> $GITHUB_ENV
           echo "VERSION_STR=$version_str" >> $GITHUB_ENV
       - name: Comment PR
-        if: steps.check-version.outputs.check_result == 'false'
+        if: github.env.CHECK_RESULT == 'false'
         uses: thollander/actions-comment-pull-request@v2
         with:
           message: |
-            检测到debian/changelog版本变动异常: ${{steps.check-version.outputs.version_str}}
-      - if: steps.check-version.outputs.check_result == 'false'
+            检测到debian/changelog版本变动异常: ${{github.env.VERSION_STR}}
+      - if: github.env.CHECK_RESULT == 'false'
         run: |
           if [[ "$CHECK_RESULT" == "false" ]];then
             echo "debian/changelog版本变动异常:$VERSION_STR"

@@ -26,20 +26,20 @@ jobs:
           check_keys: export,unset
       - name: Publish reports
         id: artifact-upload-step
-        if: steps.check-env-keys.outputs.check_result != '{}'
+        if: github.env.CHECK_RESULT != '{}'
         uses: actions/upload-artifact@v4
         with:
           name: env-set-words-check-report
           path: result.json
       - name: Comment PR
-        if: steps.check-env-keys.outputs.check_result != '{}'
+        if: github.env.CHECK_RESULT != '{}'
         uses: thollander/actions-comment-pull-request@v2
         with:
           message: |
             检测到export/unset敏感词变动:https://github.com/${{github.repository}}/actions/runs/${{ github.run_id }}/artifacts/${{steps.artifact-upload-step.outputs.artifact-id}}
-      - run: |
+      - if: github.env.CHECK_RESULT != '{}'
+        run: |
           if [[ "$CHECK_RESULT" != "{}" ]];then
             echo "环境设置敏感词export/unset检查不通过"
-            echo "$CHECK_RESULT" >> $GITHUB_STEP_SUMMARY
             exit 1
           fi
