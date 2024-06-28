@@ -8,10 +8,10 @@ jobs:
         matrix:
           check_type: [modify, all]
           check_keys: ["getcap,setcap,lshw,dmidecode", "export,unset"]
-          include:
-            - check_type: modify
-              check_keys: "getcap,setcap,lshw,dmidecode"
+          exclude:
             - check_type: all
+              check_keys: "getcap,setcap,lshw,dmidecode"
+            - check_type: modify
               check_keys: "export,unset"
     steps:
       - name: Fetch API Data
@@ -38,7 +38,7 @@ jobs:
         if: env.CHECK_RESULT == 'False'
         uses: actions/upload-artifact@v4
         with:
-          name: specical-words-check-report
+          name: specical-words-check-report-${{ matrix.check_type }}-${{ job.container.id }}
           path: result.json
       - name: Comment PR
         if: env.CHECK_RESULT == 'False'
