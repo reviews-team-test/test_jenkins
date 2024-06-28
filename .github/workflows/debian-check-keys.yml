@@ -1,8 +1,8 @@
-name: Debian Check
+name: Debian Check Keys
 on: workflow_call
 
 jobs:
-  Check-Specical-Words:
+  debian-check-keys:
     runs-on: ubuntu-latest
     strategy:
         matrix:

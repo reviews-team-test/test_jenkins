@@ -1,8 +1,8 @@
-name: Debian Check
+name: Debian Check Prefix
 on: workflow_call
 
 jobs:
-  Check-Debian-Prefix:
+  debian-check-prefix:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4

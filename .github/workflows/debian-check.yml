@@ -4,11 +4,11 @@ on: workflow_call
 permissions: write-all
 
 jobs:
-  call-debian-prefix-check:
+  call-debian-check-prefix:
     uses: ./.github/workflows/debian-check-prefix.yml
-  call-debian-version-check:
+  call-debian-check-version:
     uses: ./.github/workflows/debian-check-version.yml
-  call-specical-words-check:
+  call-debian-check-keys:
     uses: ./.github/workflows/debian-check-keys.yml
   # call-env-set-words-check:
   #   uses: ./.github/workflows/debian-check-env.yml
