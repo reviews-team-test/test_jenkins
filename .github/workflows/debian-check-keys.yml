@@ -38,15 +38,15 @@ jobs:
         if: env.CHECK_RESULT == 'False'
         uses: actions/upload-artifact@v4
         with:
-          name: specical-words-check-report-${{ matrix.check_type }}-${{ job.container.id }}
+          name: words-check-report-${{ matrix.check_type }}
           path: result.json
       - name: Comment PR
         if: env.CHECK_RESULT == 'False'
         uses: thollander/actions-comment-pull-request@v2
         with:
           message: |
-            检测到敏感词getcap/setcap/lshw/dmidecode变动:https://github.com/${{github.repository}}/actions/runs/${{github.run_id}}/artifacts/${{steps.artifact-upload-step.outputs.artifact-id}}
+            检测到敏感词${{matrix.check_keys}}变动:https://github.com/${{github.repository}}/actions/runs/${{github.run_id}}/artifacts/${{steps.artifact-upload-step.outputs.artifact-id}}
       - if: env.CHECK_RESULT == 'False'
         run: |
-          echo "敏感词getcap/setcap/lshw/dmidecode检查不通过"
+          echo "敏感词${{matrix.check_keys}}检查不通过"
           exit 1
