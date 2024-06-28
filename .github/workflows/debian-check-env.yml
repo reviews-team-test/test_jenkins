@@ -39,6 +39,7 @@ jobs:
             检测到export/unset敏感词变动:https://github.com/${{github.repository}}/actions/runs/${{ github.run_id }}/artifacts/${{steps.artifact-upload-step.outputs.artifact-id}}
       - if: github.env.CHECK_RESULT != '{}'
         run: |
+          echo "CHECK_RESULT is $CHECK_RESULT"
           if [[ "$CHECK_RESULT" != "{}" ]];then
             echo "环境设置敏感词export/unset检查不通过"
             exit 1
