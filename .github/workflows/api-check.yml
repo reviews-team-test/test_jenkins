@@ -47,14 +47,16 @@ jobs:
           ./deepin-abigail -c fastFilesCompare.json | tee api_check.txt
           if [ -e 'api_check.txt' ];then
             check_num=$(cat api_check.txt | grep -c '\[Del_export_fun')
+            echo "check_num is $check_num"
             if [ "$check_num" > '0' ];then
               sed -i '1i API接口检查检测到存在对外接口删除:' api_check.txt
+              echo "CHECK_NUM=$check_num" >> $GITHUB_ENV
+              echo "111111"
               exit 1
             fi
           fi
-          echo "CHECK_NUM=$check_num" >> $GITHUB_ENV
       - name: Comment PR
-        if: always() && github.env.CHECK_NUM > '0'
+        if: always() && env.CHECK_NUM > '0'
         uses: thollander/actions-comment-pull-request@v2
         with:
           filePath: api_check.txt

@@ -25,20 +25,25 @@ jobs:
         env:
           check_type: all
           check_keys: export,unset
+      - run: |
+          echo "test_tmp1 is $test_tmp"
+          echo "test_tmp2 is $CHECK_RESULT"
+        env:
+          test_tmp: ${{ env.CHECK_RESULT }}
       - name: Publish reports
         id: artifact-upload-step
-        if: github.env.CHECK_RESULT == 'False'
+        if: env.CHECK_RESULT == 'False'
         uses: actions/upload-artifact@v4
         with:
           name: env-set-words-check-report
           path: result.json
       - name: Comment PR
-        if: github.env.CHECK_RESULT == 'False'
+        if: env.CHECK_RESULT == 'False'
         uses: thollander/actions-comment-pull-request@v2
         with:
           message: |
             检测到export/unset敏感词变动:https://github.com/${{github.repository}}/actions/runs/${{ github.run_id }}/artifacts/${{steps.artifact-upload-step.outputs.artifact-id}}
-      - if: github.env.CHECK_RESULT == 'False'
+      - if: env.CHECK_RESULT == 'False'
         run: |
           echo "CHECK_RESULT is $CHECK_RESULT"
           if [[ "$CHECK_RESULT" != "{}" ]];then
