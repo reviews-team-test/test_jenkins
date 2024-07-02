@@ -10,5 +10,21 @@ jobs:
     uses: ./.github/workflows/debian-check-version.yml
   call-debian-check-keys:
     uses: ./.github/workflows/debian-check-keys.yml
-  # call-env-set-words-check:
-  #   uses: ./.github/workflows/debian-check-env.yml
+  label-PR:
+    needs: [call-debian-check-prefix, call-debian-check-version, call-debian-check-keys]
+    runs-on: ubuntu-latest
+    steps:
+      - id: get-labels
+        if: always()
+        run: |
+          label="Debian-verify"
+          if [ ${{ needs.call-debian-check-prefix.result }} = "success" ] && [ ${{ needs.call-debian-check-version.result }} = "success" ] && [ ${{ needs.call-debian-check-keys.result }} = "success" ]; then
+            echo "Debian Check Success"
+          else
+            echo "Debian Check Failed"
+            label="Debian-verify-1"
+          fi
+          echo "LABEL=$label" >> $GITHUB_OUTPUT
+      - uses: KeisukeYamashita/attach-labels@v1
+        with:
+          labels: steps.get-labels.outputs.LABEL
