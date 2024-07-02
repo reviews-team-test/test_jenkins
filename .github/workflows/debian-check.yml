@@ -11,11 +11,11 @@ jobs:
   call-debian-check-keys:
     uses: ./.github/workflows/debian-check-keys.yml
   label-PR:
+    if: always()
     needs: [call-debian-check-prefix, call-debian-check-version, call-debian-check-keys]
     runs-on: ubuntu-latest
     steps:
       - id: get-labels
-        if: always()
         run: |
           label="Debian-verify"
           if [ ${{ needs.call-debian-check-prefix.result }} = "success" ] && [ ${{ needs.call-debian-check-version.result }} = "success" ] && [ ${{ needs.call-debian-check-keys.result }} = "success" ]; then
