@@ -17,14 +17,20 @@ jobs:
     steps:
       - id: get-labels
         run: |
-          label="Debian-verify"
+          label="Debian-Verify"
           if [ ${{ needs.call-debian-check-prefix.result }} = "success" ] && [ ${{ needs.call-debian-check-version.result }} = "success" ] && [ ${{ needs.call-debian-check-keys.result }} = "success" ]; then
             echo "Debian Check Success"
           else
             echo "Debian Check Failed"
-            label="Debian-verify-1"
+            label="Debian-Verify-1"
           fi
           echo "LABEL=$label" >> $GITHUB_OUTPUT
       - uses: KeisukeYamashita/attach-labels@v1
         with:
           labels: ${{ steps.get-labels.outputs.LABEL }}
+      - uses: wagner-cotta/arsc-label@v1.0
+        with:
+          token: ${{secrets.GITHUB_TOKEN}}
+          operation: set
+          labels: ${{ steps.get-labels.outputs.LABEL }}
+          object-id: ${{ github.event.pull_request.number }}
