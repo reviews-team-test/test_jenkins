@@ -27,4 +27,4 @@ jobs:
           echo "LABEL=$label" >> $GITHUB_OUTPUT
       - uses: KeisukeYamashita/attach-labels@v1
         with:
-          labels: steps.get-labels.outputs.LABEL
+          labels: ${{ steps.get-labels.outputs.LABEL }}
