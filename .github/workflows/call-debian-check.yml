@@ -10,4 +10,4 @@ concurrency:
 jobs:
   debian-check:
     uses: ./.github/workflows/debian-check.yml
-    
+    secrets: inherit
