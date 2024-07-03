@@ -1,0 +1,12 @@
+name: addReviewerTeam
+on: workflow_call
+
+jobs:
+  add-reviewer-team:
+    if: failure()
+    runs-on: ubuntu-latest
+    steps:
+      - uses: ryaugusta/pr-add-reviewers-action@v1
+        with:
+          token: ${{ secrets.REVIEW_TOKEN }}
+          team_reviewers: reiviews-test-team
