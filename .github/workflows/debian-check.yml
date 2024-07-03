@@ -13,7 +13,10 @@ jobs:
   add-reviewers:
     needs: [call-debian-check-prefix, call-debian-check-version, call-debian-check-keys]
     if: failure()
-    uses: ryaugusta/pr-add-reviewers-action@v1
-    with:
-      token: ${{ secrets.REVIEW_TOKEN }}
-      team_reviewers: reiviews-test-team
+    runs-on: ubuntu-latest
+    steps:
+      - id: get-labels
+        uses: ryaugusta/pr-add-reviewers-action@v1
+        with:
+          token: ${{ secrets.REVIEW_TOKEN }}
+          team_reviewers: reiviews-test-team
