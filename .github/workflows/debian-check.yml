@@ -12,14 +12,4 @@ jobs:
     uses: ./.github/workflows/debian-check-keys.yml
   add-reviewers:
     needs: [call-debian-check-prefix, call-debian-check-version, call-debian-check-keys]
-    if: failure()
-    runs-on: ubuntu-latest
-    steps:
-      - run: |
-          echo token is $token
-        env:
-          token: ${{ secrets.REVIEW_TOKEN }}
-      - uses: ryaugusta/pr-add-reviewers-action@v1
-        with:
-          token: ${{ secrets.REVIEW_TOKEN }}
-          team_reviewers: reiviews-test-team
+    uses: ./.github/workflows/add-reviewer-team.yml
