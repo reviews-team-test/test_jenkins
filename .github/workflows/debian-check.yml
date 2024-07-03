@@ -14,3 +14,4 @@ jobs:
     if: failure()
     needs: [call-debian-check-prefix, call-debian-check-version, call-debian-check-keys]
     uses: ./.github/workflows/add-reviewer-team.yml
+    secrets: inherit
