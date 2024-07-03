@@ -5,13 +5,17 @@ permissions: write-all
 
 jobs:
   call-debian-check-prefix:
-    uses: kuchune/check-tools/.github/workflows/debian-check-prefix.yml@develop
+    uses: ./.github/workflows/debian-check-prefix.yml
   call-debian-check-version:
-    uses: kuchune/check-tools/.github/workflows/debian-check-version.yml@develop
+    uses: ./.github/workflows/debian-check-version.yml
   call-debian-check-keys:
-    uses: kuchune/check-tools/.github/workflows/debian-check-keys.yml@develop
+    uses: ./.github/workflows/debian-check-keys.yml
   post-debian-check:
     if: failure()
     needs: [call-debian-check-prefix, call-debian-check-version, call-debian-check-keys]
-    uses: kuchune/check-tools/.github/workflows/add-reviewer-team.yml@develop
-    secrets: inherit
+    runs-on: ubuntu-latest
+    steps:
+      - uses: ryaugusta/pr-add-reviewers-action@v1
+        with:
+          token: ${{ secrets.REVIEW_TOKEN }}
+          team_reviewers: reiviews-test-teamrit
