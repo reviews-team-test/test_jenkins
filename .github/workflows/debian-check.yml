@@ -5,13 +5,13 @@ permissions: write-all
 
 jobs:
   call-debian-check-prefix:
-    uses: ./.github/workflows/debian-check-prefix.yml
+    uses: kuchune/check-tools/.github/workflows/debianCheck/debian-check-prefix.yml@develop
   call-debian-check-version:
-    uses: ./.github/workflows/debian-check-version.yml
+    uses: kuchune/check-tools/.github/workflows/debianCheck/debian-check-version.yml@develop
   call-debian-check-keys:
-    uses: ./.github/workflows/debian-check-keys.yml
-  add-reviewers:
+    uses: kuchune/check-tools/.github/workflows/debianCheck/debian-check-keys.yml@develop
+  post-debian-check:
     if: failure()
     needs: [call-debian-check-prefix, call-debian-check-version, call-debian-check-keys]
-    uses: ./.github/workflows/add-reviewer-team.yml
+    uses: kuchune/check-tools/.github/workflows/add-reviewer-team.yml@develop
     secrets: inherit
