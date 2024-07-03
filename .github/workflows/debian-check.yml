@@ -15,8 +15,11 @@ jobs:
     if: failure()
     runs-on: ubuntu-latest
     steps:
-      - id: get-labels
-        uses: ryaugusta/pr-add-reviewers-action@v1
+      - run: |
+          echo token is $token
+        env:
+          token: ${{ secrets.REVIEW_TOKEN }}
+      - uses: ryaugusta/pr-add-reviewers-action@v1
         with:
           token: ${{ secrets.REVIEW_TOKEN }}
           team_reviewers: reiviews-test-team
