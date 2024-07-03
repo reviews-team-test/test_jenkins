@@ -5,11 +5,11 @@ permissions: write-all
 
 jobs:
   call-debian-check-prefix:
-    uses: kuchune/check-tools/.github/workflows/debianCheck/debian-check-prefix.yml@develop
+    uses: kuchune/check-tools/.github/workflows/debian-check-prefix.yml@develop
   call-debian-check-version:
-    uses: kuchune/check-tools/.github/workflows/debianCheck/debian-check-version.yml@develop
+    uses: kuchune/check-tools/.github/workflows/debian-check-version.yml@develop
   call-debian-check-keys:
-    uses: kuchune/check-tools/.github/workflows/debianCheck/debian-check-keys.yml@develop
+    uses: kuchune/check-tools/.github/workflows/debian-check-keys.yml@develop
   post-debian-check:
     if: failure()
     needs: [call-debian-check-prefix, call-debian-check-version, call-debian-check-keys]
