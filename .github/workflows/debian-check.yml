@@ -10,27 +10,10 @@ jobs:
     uses: ./.github/workflows/debian-check-version.yml
   call-debian-check-keys:
     uses: ./.github/workflows/debian-check-keys.yml
-  label-PR:
-    if: always()
+  add-reviewers:
     needs: [call-debian-check-prefix, call-debian-check-version, call-debian-check-keys]
-    runs-on: ubuntu-latest
-    steps:
-      - id: get-labels
-        run: |
-          label="Debian-Verify"
-          if [ ${{ needs.call-debian-check-prefix.result }} = "success" ] && [ ${{ needs.call-debian-check-version.result }} = "success" ] && [ ${{ needs.call-debian-check-keys.result }} = "success" ]; then
-            echo "Debian Check Success"
-          else
-            echo "Debian Check Failed"
-            label="Debian-Verify-1"
-          fi
-          echo "LABEL=$label" >> $GITHUB_OUTPUT
-      - uses: KeisukeYamashita/attach-labels@v1
-        with:
-          labels: ${{ steps.get-labels.outputs.LABEL }}
-      - uses: wagner-cotta/arsc-label@v1.0
-        with:
-          token: ${{secrets.GITHUB_TOKEN}}
-          operation: set
-          labels: ${{ steps.get-labels.outputs.LABEL }}
-          object-id: ${{ github.event.pull_request.number }}
+    if: failure()
+    uses: ryaugusta/pr-add-reviewers-action@v1
+    with:
+      token: ${{ secrets.REVIEW_TOKEN }}
+      team_reviewers: reiviews-test-team
