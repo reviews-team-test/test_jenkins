@@ -14,6 +14,7 @@ jobs:
     if: failure()
     needs: [call-debian-check-prefix, call-debian-check-version, call-debian-check-keys]
     uses: ./.github/workflows/debian-check-post.yml
+    secrets: inherit
     with:
       debian-check-prefix-status: ${{ needs.call-debian-check-prefix.outputs.check_status }}
       debian-check-prefix-msg: ${{ needs.call-debian-check-prefix.outputs.check_msg }}
