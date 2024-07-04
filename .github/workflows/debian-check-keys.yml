@@ -80,7 +80,7 @@ jobs:
         run: |
           {
             echo "check_msg_${{ matrix.check_type }}<<EOF"
-            $check_msg
+            echo "$check_msg"
             echo EOF
           } >> "$GITHUB_OUTPUT"
           echo "check_status_${{ matrix.check_type }}=$check_status" >> "$GITHUB_OUTPUT"
