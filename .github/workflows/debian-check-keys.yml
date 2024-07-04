@@ -47,24 +47,18 @@ jobs:
       - id: check-keys
         run: |
           check_result=$(python3 debianCheck/debianCheck/do-with-data.py ${check_type} ${check_keys} fetch-api-data-action/data.json)
-          echo "CHECK_RESULT=$check_result" >> $GITHUB_ENV
+          echo "check_result=$check_result" >> "$GITHUB_OUTPUT"
         env:
           check_type: ${{ matrix.check_type }}
           check_keys: ${{ matrix.check_keys }}
       - name: Publish reports
         id: artifact-upload-step
-        if: env.CHECK_RESULT == 'False'
+        if: steps.check-keys.outputs.check_result == 'False'
         uses: actions/upload-artifact@v4
         with:
           name: words-check-report-${{ matrix.check_type }}
           path: result.json
-      # - name: Comment PR
-      #   if: env.CHECK_RESULT == 'False'
-      #   uses: thollander/actions-comment-pull-request@v2
-      #   with:
-      #     message: |
-      #       检测到敏感词${{matrix.check_keys}}变动:https://github.com/${{github.repository}}/actions/runs/${{github.run_id}}/artifacts/${{steps.artifact-upload-step.outputs.artifact-id}}
-      - if: env.CHECK_RESULT == 'False'
+      - if: steps.check-keys.outputs.check_result == 'False'
         id: get-result
         run: |
           echo "敏感词${{matrix.check_keys}}检查不通过"
