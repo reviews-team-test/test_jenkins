@@ -45,6 +45,9 @@ jobs:
           if [ ${{ inputs.debian-check-key-status }} == 'failure' ];then
             echo "${{ inputs.debian-check-key-msg }}" >> comment.txt
           fi
+          if [ -f 'comment.txt' ];then
+            sed -i '1i [Debian检查]:' api_check.txt
+          fi
       - name: Comment PR
         if: hashFiles('comment.txt')
         uses: thollander/actions-comment-pull-request@v2
