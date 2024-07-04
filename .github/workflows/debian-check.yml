@@ -13,9 +13,13 @@ jobs:
   post-debian-check:
     if: failure()
     needs: [call-debian-check-prefix, call-debian-check-version, call-debian-check-keys]
-    runs-on: ubuntu-latest
-    steps:
-      - uses: ryaugusta/pr-add-reviewers-action@v1
-        with:
-          token: ${{ secrets.REVIEW_TOKEN }}
-          team_reviewers: reiviews-test-team
+    uses: ./.github/workflows/debian-check-post.yml
+    with:
+      debian-check-prefix-status: ${{ needs.call-debian-check-prefix.outputs.check_status }}
+      debian-check-prefix-msg: ${{ needs.call-debian-check-prefix.outputs.check_msg }}
+      debian-check-version-status: ${{ needs.call-debian-check-version.outputs.check_status }}
+      debian-check-version-msg: ${{ needs.call-debian-check-version.outputs.check_msg }}
+      debian-check-key-status-env: ${{ needs.call-debian-check-keys.outputs.check_status_env }}
+      debian-check-key-msg-env: ${{ needs.call-debian-check-keys.outputs.check_msg_env}}
+      debian-check-key-status: ${{ needs.call-debian-check-keys.outputs.check_status }}
+      debian-check-key-msg: ${{ needs.call-debian-check-keys.outputs.check_msg }}

@@ -1,9 +1,20 @@
 name: Debian Check Version
-on: workflow_call
+on: 
+  workflow_call:
+    outputs:
+      check_msg:
+        description: "output comment msg"
+        value: ${{ jobs.debian-check-version.outputs.check_msg }}
+      check_status:
+        description: "check status"
+        value: ${{ jobs.debian-check-version.outputs.check_status }}
 
 jobs:
   debian-check-version:
     runs-on: ubuntu-latest
+    outputs:
+      check_msg: ${{ steps.get-output.outputs.check_msg }}
+      check_status: ${{ steps.get-output.outputs.check_status}}
     steps:
       - uses: actions/checkout@v4
         with:
@@ -35,15 +46,26 @@ jobs:
           fi
           echo "CHECK_RESULT=$check_result" >> $GITHUB_ENV
           echo "VERSION_STR=$version_str" >> $GITHUB_ENV
-      - name: Comment PR
-        if: github.env.CHECK_RESULT == 'false'
-        uses: thollander/actions-comment-pull-request@v2
-        with:
-          message: |
-            检测到debian/changelog版本变动异常: ${{github.env.VERSION_STR}}
+      # - name: Comment PR
+      #   if: github.env.CHECK_RESULT == 'false'
+      #   uses: thollander/actions-comment-pull-request@v2
+      #   with:
+      #     message: |
+      #       检测到debian/changelog版本变动异常: ${{github.env.VERSION_STR}}
       - if: github.env.CHECK_RESULT == 'false'
+        id: get-result
         run: |
           if [[ "$CHECK_RESULT" == "false" ]];then
             echo "debian/changelog版本变动异常:$VERSION_STR"
             exit 1
           fi
+      - name: Get Output
+        id: get-output
+        if: always()
+        env:
+          check_msg: |
+            检测到debian/changelog版本变动异常: ${{ github.env.VERSION_STR }}
+          check_status: ${{ steps.get-result.outcome }}
+        run: |
+          echo "check_msg=$check_msg" >> "$GITHUB_OUTPUT"
+          echo "check_status=$check_status" >> "$GITHUB_OUTPUT"
