@@ -25,12 +25,12 @@ jobs:
       check_status_modify: ${{ steps.get-output.outputs.check_status_modify }}
     continue-on-error: true
     strategy:
-        matrix:
-          include:
-            - check_type: modify
-              check_keys: "getcap,setcap,lshw,dmidecode"
-            - check_type: all
-              check_keys: "export,unset"
+      matrix:
+        include:
+          - check_type: modify
+            check_keys: "getcap,setcap,lshw,dmidecode"
+          - check_type: all
+            check_keys: "export,unset"
     steps:
       - name: Fetch API Data
         uses: JamesIves/fetch-api-data-action@v2
