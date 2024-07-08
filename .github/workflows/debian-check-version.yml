@@ -13,8 +13,9 @@ jobs:
   debian-check-version:
     runs-on: ubuntu-latest
     outputs:
-      check_msg: ${{ steps.get-output.outputs.check_msg }}
-      check_status: ${{ steps.get-output.outputs.check_status}}
+      check_msg: |
+        检测到debian/changelog版本变动异常: ${{ steps.check-version.outputs.version_str }}
+      check_status: ${{ steps.get-result.outcome }}
     steps:
       - uses: actions/checkout@v4
         with:
@@ -51,13 +52,13 @@ jobs:
         run: |
           echo "debian/changelog版本变动异常:${{ steps.check-version.outputs.version_str }}"
           exit 1
-      - name: Get Output
-        id: get-output
-        if: always()
-        env:
-          check_msg: |
-            检测到debian/changelog版本变动异常: ${{ steps.check-version.outputs.version_str }}
-          check_status: ${{ steps.get-result.outcome }}
-        run: |
-          echo "check_msg=$check_msg" >> "$GITHUB_OUTPUT"
-          echo "check_status=$check_status" >> "$GITHUB_OUTPUT"
+      # - name: Get Output
+      #   id: get-output
+      #   if: always()
+      #   env:
+      #     check_msg: |
+      #       检测到debian/changelog版本变动异常: ${{ steps.check-version.outputs.version_str }}
+      #     check_status: ${{ steps.get-result.outcome }}
+      #   run: |
+      #     echo "check_msg=$check_msg" >> "$GITHUB_OUTPUT"
+      #     echo "check_status=$check_status" >> "$GITHUB_OUTPUT"

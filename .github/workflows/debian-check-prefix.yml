@@ -13,8 +13,8 @@ jobs:
   debian-check-prefix:
     runs-on: ubuntu-latest
     outputs:
-      check_msg: ${{ steps.get-output.outputs.check_msg }}
-      check_status: ${{ steps.get-output.outputs.check_status}}
+      check_msg: "检测到debian目录文件有变更: ${{ steps.get-changed-files.outputs.all_changed_files }}"
+      check_status: ${{ steps.check-changed-files.outcome }}
     steps:
       - uses: actions/checkout@v4
         with:
@@ -38,13 +38,13 @@ jobs:
         run: |
           echo "debian目录变动文件: ${{ steps.get-changed-files.outputs.all_changed_files }}"
           exit 1
-      - name: Get Output
-        id: get-output
-        if: always()
-        env:
-          check_msg: |
-            检测到debian目录文件有变更: ${{ steps.get-changed-files.outputs.all_changed_files }}
-          check_status: ${{ steps.check-changed-files.outcome }}
-        run: |
-          echo "check_msg=$check_msg" >> "$GITHUB_OUTPUT"
-          echo "check_status=$check_status" >> "$GITHUB_OUTPUT"
+      # - name: Get Output
+      #   id: get-output
+      #   if: always()
+      #   env:
+      #     check_msg: |
+      #       检测到debian目录文件有变更: ${{ steps.get-changed-files.outputs.all_changed_files }}
+      #     check_status: ${{ steps.check-changed-files.outcome }}
+      #   run: |
+      #     echo "check_msg=$check_msg" >> "$GITHUB_OUTPUT"
+      #     echo "check_status=$check_status" >> "$GITHUB_OUTPUT"
