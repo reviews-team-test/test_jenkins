@@ -55,5 +55,5 @@ jobs:
           filePath: comment.txt
       - uses: ryaugusta/pr-add-reviewers-action@v1
         with:
-          token: ${{ secrets.REVIEW_TOKEN }}
+          token: ${{ github.token }}
           team_reviewers: reiviews-test-team
