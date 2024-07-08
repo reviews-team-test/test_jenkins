@@ -60,5 +60,5 @@ jobs:
       - name: Run assignment of reviewer team
         uses: nikosmoum/auto-assign-reviewer-team@v0.5
         with:
-          githubToken: ${{ secrets.GITHUB_TOKEN }}
+          githubToken: ${{ secrets.REVIEW_TOKEN }}
           teamName: reiviews-test-team
