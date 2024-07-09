@@ -7,7 +7,7 @@ jobs:
       - run: |
           const octokit = new Octokit({ auth: 'organization_token' });
           
-          const {
-            data: { login },
-          } = await octokit.rest.users.getAuthenticated();
-          console.log("Hello, %s", login);
+          # const {
+          #   data: { login },
+          # } = await octokit.rest.users.getAuthenticated();
+          console.log("Hello, %s", octokit);
