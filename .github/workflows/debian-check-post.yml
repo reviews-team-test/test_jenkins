@@ -53,12 +53,7 @@ jobs:
         uses: thollander/actions-comment-pull-request@v2
         with:
           filePath: comment.txt
-      # - uses: ryaugusta/pr-add-reviewers-action@v1
-      #   with:
-      #     token: ${{ secrets.REVIEW_TOKEN }}
-      #     team_reviewers: reiviews-test-team
-      - name: Run assignment of reviewer team
-        uses: nikosmoum/auto-assign-reviewer-team@v0.5
+      - uses: ryaugusta/pr-add-reviewers-action@v1
         with:
-          githubToken: ${{ secrets.ORGAN_TOKEN }}
-          teamName: reiviews-test-team
+          token: ${{ secrets.GITHUB_TOKEN }}
+          reviewers: ckux,feixue-ckux
