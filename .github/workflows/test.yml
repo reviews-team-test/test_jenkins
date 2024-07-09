@@ -8,9 +8,14 @@ jobs:
   test:
     runs-on: ubuntu-latest
     steps:
-      - run: |
-          const octokit = new Octokit({ 
-            auth: process.env.token 
-          });
-          const { data: { login } } = await octokit.rest.users.getAuthenticated();
-          console.log("Hello, %s", octokit);
+      - id: get-token
+        uses: actions/github-script@v6
+        with:
+          script: |
+            global["fetch"] = fetch
+            const { Octokit } = require("@octokit/rest");
+            const octokit = new Octokit({ 
+              auth: process.env.token 
+            });
+            const { data: { login } } = await octokit.rest.users.getAuthenticated();
+            console.log("Hello, %s", octokit);
