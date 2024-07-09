@@ -5,9 +5,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - run: |
-          const octokit = new Octokit({ auth: 'organization_token' });
-          
-          # const {
-          #   data: { login },
-          # } = await octokit.rest.users.getAuthenticated();
+          const octokit = new Octokit({ auth: ${{ secrets.REVIEW_TOKEN }} });
+          const { data: { login } } = await octokit.rest.users.getAuthenticated();
           console.log("Hello, %s", octokit);
