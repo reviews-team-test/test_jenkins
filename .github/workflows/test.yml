@@ -1,10 +1,14 @@
 on:
   workflow_dispatch:
+
+env:
+  token: ${{ secrets.GITHUB_TOKEN }}
+
 jobs:
-  use_api:
+  test:
     runs-on: ubuntu-latest
     steps:
       - run: |
-          const octokit = new Octokit({ auth: ${{ secrets.REVIEW_TOKEN }} });
+          const octokit = new Octokit({ auth: process.env.token });
           const { data: { login } } = await octokit.rest.users.getAuthenticated();
           console.log("Hello, %s", octokit);
