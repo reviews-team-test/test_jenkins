@@ -26,7 +26,9 @@ on:
       debian-check-key-msg:
         required: true
         type: string
-
+    secrets:
+      REVIEW_TOKEN:
+        required: true
 jobs:
   post-debian-check:
     runs-on: ubuntu-latest
@@ -53,7 +55,9 @@ jobs:
         uses: thollander/actions-comment-pull-request@v2
         with:
           filePath: comment.txt
-      - uses: ryaugusta/pr-add-reviewers-action@v1
+      - name: Run assignment of reviewer team
+        uses: ryaugusta/pr-add-reviewers-action@v1
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          reviewers: ckux,feixue-ckux
+          token: ${{ secrets.REVIEW_TOKEN }}
+          team_reviewers: reiviews-test-team
+
