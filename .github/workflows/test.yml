@@ -2,7 +2,7 @@ on:
   workflow_dispatch:
 
 env:
-  token: ${{ secrets.GITHUB_TOKEN }}
+  token: ${{ secrets.REVIEW_TOKEN }}
 
 jobs:
   test:
