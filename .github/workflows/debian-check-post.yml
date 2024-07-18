@@ -61,7 +61,8 @@ jobs:
           random_index=$(( $RANDOM % ${#reviewer_list[@]} ))
           random_value=${reviewer_list[$random_index]}
           echo "reviewer=$random_value" >> "$GITHUB_OUTPUT"
-      - name: Run assignment of reviewer team
+      - name: Run assignment of reviewers
+        if: hashFiles('comment.txt')
         uses: ryaugusta/pr-add-reviewers-action@v1
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
