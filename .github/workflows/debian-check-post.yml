@@ -53,18 +53,16 @@ jobs:
         uses: thollander/actions-comment-pull-request@v2
         with:
           filePath: comment.txt
-      - id: get-a-reviewer
-        run: |
-          # reviewer_list = ["liujianqiang-niu", "lzyprime", "heysion", "heysion", "mangosteens"]
-          # reviewer_list = ["ckux", "feixue-ckux"]
-          reviewer_list=("ckux" "feixue-ckux")
-          random_index=$(( $RANDOM % ${#reviewer_list[@]} ))
-          random_value=${reviewer_list[$random_index]}
-          echo "reviewer=$random_value" >> "$GITHUB_OUTPUT"
-      - name: Run assignment of reviewers
+      - name: Run assignment of reviewer team
+        continue-on-error: true
         if: hashFiles('comment.txt')
         uses: ryaugusta/pr-add-reviewers-action@v1
         with:
+          token: ${{ secrets.REVIEW_TOKEN }}
+          team_reviewers: Package-admins
+      - name: Run assignment of reviewers
+        if: hashFiles('comment.txt') && failure()
+        uses: ryaugusta/pr-add-reviewers-action@v1
+        with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          reviewers: ${{ steps.get-a-reviewer.outputs.reviewer }}
-
+          reviewers: ckux
