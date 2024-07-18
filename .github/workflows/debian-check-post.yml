@@ -53,9 +53,17 @@ jobs:
         uses: thollander/actions-comment-pull-request@v2
         with:
           filePath: comment.txt
+      - id: get-a-reviewer
+        run: |
+          # reviewer_list = ["liujianqiang-niu", "lzyprime", "heysion", "heysion", "mangosteens"]
+          # reviewer_list = ["ckux", "feixue-ckux"]
+          reviewer_list=("ckux" "feixue-ckux")
+          random_index=$(( $RANDOM % ${#reviewer_list[@]} ))
+          random_value=${reviewer_list[$random_index]}
+          echo "reviewer=$random_value" >> "$GITHUB_OUTPUT"
       - name: Run assignment of reviewer team
         uses: ryaugusta/pr-add-reviewers-action@v1
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          reviewers: ckux,feixue-ckux
+          reviewers: ${{ steps.get-a-reviewer.outputs.reviewer }}
 
