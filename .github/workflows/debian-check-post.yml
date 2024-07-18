@@ -54,6 +54,7 @@ jobs:
         with:
           filePath: comment.txt
       - name: Run assignment of reviewer team
+        id: add-reviewer-team
         continue-on-error: true
         if: hashFiles('comment.txt')
         uses: ryaugusta/pr-add-reviewers-action@v1
@@ -61,7 +62,7 @@ jobs:
           token: ${{ secrets.REVIEW_TOKEN }}
           team_reviewers: Package-admins
       - name: Run assignment of reviewers
-        if: hashFiles('comment.txt') && failure()
+        if: ${{ hashFiles('comment.txt') && steps.add-reviewer-team.outcome == 'failure' }}
         uses: ryaugusta/pr-add-reviewers-action@v1
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
