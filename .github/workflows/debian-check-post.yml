@@ -59,7 +59,7 @@ jobs:
           sparse-checkout: common/apiForGithub.py
           sparse-checkout-cone-mode: false
           path: common
-      - id: check-reviewer
+      - name: Check Reviewers
         run: python3 common/apiForGithub.py
         env:
           REPO: ${{ github.repository }}
