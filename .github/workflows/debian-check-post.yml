@@ -53,17 +53,18 @@ jobs:
         uses: thollander/actions-comment-pull-request@v2
         with:
           filePath: comment.txt
-      - name: Run assignment of reviewer team
-        id: add-reviewer-team
-        continue-on-error: true
-        if: hashFiles('comment.txt')
-        uses: ryaugusta/pr-add-reviewers-action@v1
+      - uses: actions/checkout@v4
         with:
-          token: ${{ secrets.REVIEW_TOKEN }}
-          team_reviewers: Package-admins
-      - name: Run assignment of reviewers
-        if: ${{ hashFiles('comment.txt') && steps.add-reviewer-team.outcome == 'failure' }}
-        uses: ryaugusta/pr-add-reviewers-action@v1
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          reviewers: ckux
+          repository: kuchune/check-tools
+          sparse-checkout: common/apiForGithub.py
+          sparse-checkout-cone-mode: false
+          path: common
+      - id: check-reviewer
+        run: python3 common/apiForGithub.py
+        env:
+          REPO: ${{ github.repository }}
+          PULL_NUMBER: ${{ github.event.pull_request.number }}
+          GITHUB_TOKEN: ${{ secrets.REVIEW_TOKEN }}
+          reviewers: 'ckux'
+          reviewer_teams: 'reiviews-test-team'
+          comment_path: './comment.txt'
