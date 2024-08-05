@@ -49,6 +49,7 @@ jobs:
             sed -i '1i [Debian检查]' comment.txt
             cat comment.txt
           fi
+      - uses: csexton/debugger-action@master
       - name: Comment PR
         if: hashFiles('comment.txt')
         uses: thollander/actions-comment-pull-request@v2
