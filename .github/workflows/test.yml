@@ -16,7 +16,6 @@ jobs:
             检测到敏感词export,unset1111变动:
             https://github.com/reviews-team-test/test_jenkins/actions/runs/10241638714/artifacts/1774572979
       - name: Comment PR
-        if: hashFiles('comment.txt')
         uses: thollander/actions-comment-pull-request@v2
         with:
           filePath: comment.txt
