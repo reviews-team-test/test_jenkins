@@ -65,7 +65,7 @@ jobs:
         env:
           REPO: ${{ github.repository }}
           PULL_NUMBER: ${{ github.event.pull_request.number }}
-          GITHUB_TOKEN: ${{ secrets.REVIEW_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.ORGAN_TOKEN }}
           reviewers: 'ckux'
           reviewer_teams: 'reiviews-test-team'
           comment_path: './comment.txt'
