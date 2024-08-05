@@ -1,22 +1,22 @@
 on:
   workflow_dispatch:
 
-env:
-  token: ${{ secrets.REVIEW_TOKEN }}
-
 jobs:
   test:
     runs-on: ubuntu-latest
     steps:
-      - run: npm install @octokit/rest@19.0.13
-      - id: get-token
-        uses: actions/github-script@v6
+      - run: |
+          echo "${check_msg}" >> comment.txt
+          if [ -e 'comment.txt' ];then
+            sed -i '1i [Debian检查]' comment.txt
+            cat comment.txt
+          fi
+        env:
+          check_msg: |
+            检测到敏感词export,unset1111变动:
+            https://github.com/reviews-team-test/test_jenkins/actions/runs/10241638714/artifacts/1774572979
+      - name: Comment PR
+        if: hashFiles('comment.txt')
+        uses: thollander/actions-comment-pull-request@v2
         with:
-          script: |
-            global["fetch"] = fetch
-            const { Octokit } = require("@octokit/rest");
-            const octokit = new Octokit({ 
-              auth: process.env.token 
-            });
-            const { data: { login } } = await octokit.rest.users.getAuthenticated();
-            console.log("Hello, %s", octokit);
+          filePath: comment.txt
