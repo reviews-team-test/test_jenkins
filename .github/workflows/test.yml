@@ -1,21 +1,23 @@
 on:
   workflow_dispatch:
+    inputs:
+      debian-check-key-status-env:
+        required: true
+        type: string
+        default: |
+          检测到敏感词export,unset变动:
+          https://github.com/reviews-team-test/test_jenkins/actions/runs/10241638714/artifacts/1774572979
 
 jobs:
   test:
     runs-on: ubuntu-latest
     steps:
       - run: |
-          echo "${check_msg}" >> comment.txt
+          echo "${{ inputs.debian-check-key-status-env }}" >> comment.txt
           if [ -e 'comment.txt' ];then
             sed -i '1i [Debian检查]' comment.txt
             cat comment.txt
           fi
-        env:
-          check_msg: |
-            检测到敏感词export,unset1111变动:
-            https://github.com/reviews-team-test/test_jenkins/actions/runs/10241638714/artifacts/1774572979
-      - uses: csexton/debugger-action@master
       - name: Comment PR
         uses: thollander/actions-comment-pull-request@v2
         with:
