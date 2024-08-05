@@ -1,12 +1,5 @@
 on:
   workflow_dispatch:
-    inputs:
-      debian-check-key-status-env:
-        required: true
-        type: string
-        default: |
-          检测到敏感词export,unset变动:
-          https://github.com/reviews-team-test/test_jenkins/actions/runs/10241638714/artifacts/1774572979
 
 jobs:
   test:
