@@ -61,7 +61,7 @@ jobs:
           sparse-checkout-cone-mode: false
           path: common
       - name: Check Reviewers
-        run: python3 common/apiForGithub.py
+        run: python3 common/common/apiForGithub.py
         env:
           REPO: ${{ github.repository }}
           PULL_NUMBER: ${{ github.event.pull_request.number }}
