@@ -15,6 +15,7 @@ jobs:
           check_msg: |
             检测到敏感词export,unset1111变动:
             https://github.com/reviews-team-test/test_jenkins/actions/runs/10241638714/artifacts/1774572979
+      - uses: csexton/debugger-action@master
       - name: Comment PR
         uses: thollander/actions-comment-pull-request@v2
         with:
