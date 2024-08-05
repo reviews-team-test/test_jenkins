@@ -47,6 +47,7 @@ jobs:
           fi
           if [ -e 'comment.txt' ];then
             sed -i '1i [Debian检查]:' comment.txt
+            cat comment.txt
           fi
       - name: Comment PR
         if: hashFiles('comment.txt')
