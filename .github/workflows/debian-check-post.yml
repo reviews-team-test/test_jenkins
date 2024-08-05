@@ -60,12 +60,12 @@ jobs:
           sparse-checkout: common/apiForGithub.py
           sparse-checkout-cone-mode: false
           path: common
-      - name: check Reviewer
+      - name: Check Reviewers
         run: python3 common/apiForGithub.py
         env:
           REPO: ${{ github.repository }}
           PULL_NUMBER: ${{ github.event.pull_request.number }}
-          GITHUB_TOKEN: ${{ secrets.REVIEWER_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.REVIEW_TOKEN }}
           reviewers: 'ckux'
           reviewer_teams: 'reiviews-test-team'
-          comment_path: comment.txt
+          comment_path: './comment.txt'
