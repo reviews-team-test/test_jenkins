@@ -1,1 +1,1 @@
-echo "qqqqqqqqq"
+echo "q"
