@@ -1,1 +1,1 @@
-echo "q"
+echo "1"
