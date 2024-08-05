@@ -11,6 +11,7 @@ jobs:
   call-debian-check-keys:
     uses: ./.github/workflows/debian-check-keys.yml
   post-debian-check:
+    if: always()
     needs: [call-debian-check-prefix, call-debian-check-version, call-debian-check-keys]
     uses: ./.github/workflows/debian-check-post.yml
     secrets: inherit
