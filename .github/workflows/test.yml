@@ -10,10 +10,15 @@ jobs:
         with:
           ref: ${{ github.event.pull_request.head.sha }}
           persist-credentials: false
+      - name: Set up Clang
+        uses: egor-tensin/setup-clang@v1
+        with:
+          version: '7'
+          platform: x64
       - uses: csexton/debugger-action@master
       - name: install tools
         run: |
-          sudo apt install clang-7 libclang-dev llvm-7 python3-pip golang -y
+          sudo apt install python3-pip golang -y
           sudo pip3 install clang
       - name: download tools
         uses: actions/checkout@v4
