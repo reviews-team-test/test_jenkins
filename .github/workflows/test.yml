@@ -31,10 +31,10 @@ jobs:
               "repo_name": '"${{github.repository}}"',
               "branch": '"${{github.ref_name}}"',
               "committer": '"${{github.actor}}"',
-              "commit_event": '"${{github.server_url}}/${{github.repository}}/pull/${{github.event.pull_request.number}}"',
-              "comm"it_hash": '"${{github.sha}}"',
+              "commit_event": '"${{github.server_url}}/${{github.repository}}/pull/${{github.run_attempt}}"',
+              "commit_hash": '"${{github.run_attempt}}"',
               "commit_event_id": '"${{github.event.pull_request.number}}"',
-              "jenkins_url": '"${{github.server_url}}/${{github.repository}}/actions/runs/${{github.run_number}}/job/${{github.run_number}}"',
+              "jenkins_url": '"${{github.server_url}}/${{github.repository}}/actions/runs/${{github.run_id}}/job/${{github.run_attempt}}"',
               "email": "test@test.com"
           }'
           python3 check-tools/main.py --source_directory="." --commit_info_str="${commit_info}" || true
