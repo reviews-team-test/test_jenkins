@@ -34,7 +34,30 @@ jobs:
               "commit_event": "${{github.server_url}}/${{github.repository}}/pull/${{github.run_attempt}}",
               "commit_hash": "${{github.sha}}",
               "commit_event_id": "${{github.run_attempt}}",
-              "jenkins_url": "${{github.server_url}}/${{github.repository}}/actions/runs/${{github.run_id}}/job/${{github.run_attempt}}",
+              "jenkins_url": "${{github.server_url}}/${{github.repository}}/actions/runs/${{github.run_id}}/job/${{job.container.id}}",
               "email": "test@test.com"
           }'
           python3 check-tools/main.py --source_directory="." --commit_info_str="${commit_info}" || true
+      - name: get specified property result
+        id: repository_type
+        uses: ActionsTools/read-json-action@main
+        with:
+          file_path: "result.json"
+          prop_path: "scan_result"
+      - name: Publish reports
+        id: artifact-upload-step
+        if: steps.repository_type.outputs.value == 'unpassed'
+        uses: actions/upload-artifact@v4
+        with:
+          name: dbusApi-check-report
+          path: dbus_check.log
+      - run: |
+          if [ ${{steps.repository_type.outputs.value}} == "unpassed" ];then
+            echo "[DBUS接口安全检查检测失败](https://github.com/${{github.repository}}/actions/runs/${{ github.run_id }}/artifacts/${{steps.artifact-upload-step.outputs.artifact-id}})" >> comment.txt
+            exit 1
+          fi
+      - name: Comment PR
+        if: always() && hashFiles('comment.txt')
+        uses: thollander/actions-comment-pull-request@v2
+        with:
+          filePath: comment.txt
