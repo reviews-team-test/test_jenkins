@@ -1,16 +1,17 @@
-name: reviewdog
+name: My Workflow
 on:
     pull_request_target:
-        types: [opened, synchronize, reopened]
-
+      types: [opened, synchronize, reopened]
 jobs:
-  shellcheck:
+  build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - name: shellcheck
-        uses: reviewdog/action-shellcheck@v1
+      - uses: actions/checkout@master
+
+      - name: Add shellcheck annotator
+        uses: pr-annotators/shellcheck-pr-annotator@main
+
+      - name: Run shellcheck
+        uses: ludeeus/action-shellcheck@master
         with:
-          pattern: |
-            *.sh
-            *.bash
+          format: gcc
