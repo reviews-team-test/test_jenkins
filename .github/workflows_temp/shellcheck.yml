@@ -1,0 +1,17 @@
+name: My Workflow
+on:
+    pull_request_target:
+      types: [opened, synchronize, reopened]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@master
+
+      - name: Add shellcheck annotator
+        uses: pr-annotators/shellcheck-pr-annotator@main
+
+      - name: Run shellcheck
+        uses: ludeeus/action-shellcheck@master
+        with:
+          format: gcc
