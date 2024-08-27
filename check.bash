@@ -1,2 +1,2 @@
-echo "qqqqqqqqq1q"
+echo "qqqqqqqqq111111q"
 cd %wordfoe
