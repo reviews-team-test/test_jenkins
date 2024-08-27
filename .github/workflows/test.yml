@@ -113,6 +113,7 @@ jobs:
       - uses: ludeeus/action-shellcheck@master
         with:
           format: gcc
+          severity: error
   DbusApi-Check:
     runs-on: ubuntu-latest
     steps:
