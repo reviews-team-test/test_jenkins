@@ -8,7 +8,15 @@ jobs:
       isGo: ${{ steps.get-check-flag.outputs.isGo }}
       isC: ${{ steps.get-check-flag.outputs.isC }}
       isShell: ${{ steps.get-check-flag.outputs.isShell}}
-      change-files-shell: ${{steps.get-shell-files.outputs.all_changed_files}}
+    strategy:
+      matrix:
+        include:
+          - check_type: go
+            check_keys: "go"
+          - check_type: c++
+            check_keys: "cpp,cxx,cc,c++,c,ipp,ixx,tpp,txx"
+          - check_type: shell
+            check_keys: "sh,bash"
     steps:
       - uses: actions/checkout@v3
         with:
@@ -117,7 +125,6 @@ jobs:
       - uses: pr-annotators/shellcheck-pr-annotator@main
       - uses: ludeeus/action-shellcheck@master
         with:
-          additional_files: ${{ needs.Config-Check.outputs.change-files-shell }}
           format: gcc
   DbusApi-Check:
     runs-on: ubuntu-latest
