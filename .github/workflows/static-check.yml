@@ -45,13 +45,13 @@ jobs:
       - name: get-check-flag
         id: get-check-flag
         run: |
-          if [ ${{steps.get-primary-language.outputs.primary_language}} == 'Go' && ${{steps.get-go-files-go-files.outputs.all_changed_files}} ];then
+          if [ ${{steps.get-primary-language.outputs.primary_language}} == 'Go' && "${{steps.get-go-files.outputs.all_changed_files}}" ];then
             echo "isGo=true" >> $GITHUB_OUTPUT
           fi
-          if [ ${{steps.get-primary-language.outputs.primary_language}} == 'C++' && ${{steps.get-c-files.outputs.all_changed_files}} ];then
+          if [ ${{steps.get-primary-language.outputs.primary_language}} == 'C++' && "${{steps.get-c-files.outputs.all_changed_files}}" ];then
             echo "isC=true" >> $GITHUB_OUTPUT
           fi
-          if [ ${{steps.get-primary-language.outputs.primary_language}} == 'Go' && ${{steps.get-shell-files.outputs.all_changed_files}} ];then
+          if [ ${{steps.get-primary-language.outputs.primary_language}} == 'Go' && "${{steps.get-shell-files.outputs.all_changed_files}}" ];then
             echo "isShell=true" >> $GITHUB_OUTPUT
           fi          
       - name: Static Check with Go
@@ -86,7 +86,9 @@ jobs:
           repository: ${{ github.repository }}
           pull_request_id: ${{ github.event.pull_request.number }}
           allow_approve: false
-      - uses: pr-annotators/shellcheck-pr-annotator@main
+      - name: Static Check with sh
+        if: steps.get-check-flag.outputs.isShell == 'true'
+        uses: pr-annotators/shellcheck-pr-annotator@main
       - name: Static Check with sh
         if: steps.get-check-flag.outputs.isShell == 'true'
         uses: ludeeus/action-shellcheck@master
