@@ -1,15 +1,15 @@
-name: My Workflow
+name: reviewdog
 on: [push, pull_request]
 jobs:
-  build:
+  shellcheck:
+    name: runner / shellcheck
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@master
-
-      - name: Add shellcheck annotator
-        uses: pr-annotators/shellcheck-pr-annotator@main
-
-      - name: Run shellcheck
-        uses: ludeeus/action-shellcheck@master
+      - uses: actions/checkout@v4
+      - name: shellcheck
+        uses: reviewdog/action-shellcheck@v1
         with:
-          format: gcc
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          pattern: |
+            *.sh
+            *.bash
