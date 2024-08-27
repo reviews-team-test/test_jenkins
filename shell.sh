@@ -1,2 +1,2 @@
 echo "shell-check"
-cd $name
+cd $test
