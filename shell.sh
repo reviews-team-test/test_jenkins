@@ -1,2 +1,2 @@
 echo "shell-check"
-cd $WORKSPACE
+cd $name
