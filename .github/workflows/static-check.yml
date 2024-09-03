@@ -28,7 +28,7 @@ jobs:
           sparse-checkout-cone-mode: false
           path: staticCheck
       - if: hashFiles('.golangci.yml') == ''
-        run: mv staticCheck/golangci.yml .golangci.yml
+        run: mv staticCheck/staticCheck/golangci.yml .golangci.yml
       - uses: csexton/debugger-action@master 
       - name: GolangCILint Check
         uses: golangci/golangci-lint-action@v6
