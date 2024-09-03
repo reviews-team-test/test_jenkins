@@ -62,7 +62,7 @@ jobs:
           sparse-checkout-cone-mode: false
           path: staticCheck
       - run: |
-          for file in ${goFiles}; do
+          for file in ${{ needs.Get-Config.outputs.goFils }}; do
             echo "$file" >> change_files.txt
           done
           python3 staticCheck/staticCheck/static_tools_filter.py --type golangci-lint --file change_files.txt --xml golangci.xml || true
@@ -74,7 +74,22 @@ jobs:
               exit 1
             fi
           done
-        env:
-          goFiles: ${{ needs.Get-Config.outputs.goFils }}
+  Call-ShellCheck:
+    runs-on: ubuntu-latest
+    steps:      
+      - uses: actions/checkout@v3
+        with:
+          ref: 045f1a5608777d64266285a79368f7019b819a38
+          persist-credentials: false
+      - uses: pr-annotators/shellcheck-pr-annotator@main
+      - id: ShellCheck
+        continue-on-error: true
+        uses: ludeeus/action-shellcheck@master
+        with:
+          severity: error
+          format: gcc
+      - name: Analyze Result
+        run: |
+          echo ${{ steps.ShellCheck.outputs.files }}
       
           
