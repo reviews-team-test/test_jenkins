@@ -3,7 +3,30 @@ on:
   workflow_dispatch:
 
 jobs:
+  Get-Config:
+    runs-on: ubuntu-latest
+    outputs:
+      isGo: ${{ steps.get-check-flag.outputs.isGo }}
+      goFils: ${{ steps.get-go-files.outputs.all_changed_files }}
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          ref: 29ea5048a28a0a7b480f1face46519256247d255
+          persist-credentials: false
+      - name: Get Go Files
+        id: get-go-files
+        uses: SkyHighGrowth/gha-changed-files@v1.0.1
+        with:
+          files: |
+            **.go
+      - name: get-check-flag
+        id: get-check-flag
+        run: |
+          if [ "${{steps.get-go-files.outputs.all_changed_files}}" ];then
+            echo "isGo=true" >> $GITHUB_OUTPUT
+          fi
   Call-GolangCiLint:
+    needs: Get-Config
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -37,15 +60,28 @@ jobs:
           only-new-issues: true
       - if: always()
         uses: csexton/debugger-action@master
+      - name: Analyze Result
+        uses: actions/checkout@v4
+        with:
+          repository: kuchune/check-tools
+          sparse-checkout: staticCheck/static_tools_filter.py
+          sparse-checkout-cone-mode: false
+          path: staticCheck
       - name: analyze result
         run: |
+          for file in ${goFiles}; do
+            echo "$file" >> change_files.txt
+          done
+          python3 staticCheck/staticCheck/static_tools_filter.py --type golangci-lint --file change_files.txt --xml golangci.xml || true
           for errType in "error" "failure";do
-            num=$(egrep -c "[[:space:]]+<${errType} .*message=" golangci.xml)
+            num=$(egrep -c "[[:space:]]+<${errType} .*message=" golangci_new.xml)
             echo "${errType} num is ${num}"
             if [ "${errType}" == "error" ] && [ "${num}" != "0" ];then
               echo "golangci-lint check failed"
               exit 1
             fi
           done
+        env:
+          goFiles: ${{ needs.Get-Config.outputs.goFils }}
       
           
