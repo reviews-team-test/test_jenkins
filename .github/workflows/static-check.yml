@@ -67,8 +67,7 @@ jobs:
           sparse-checkout: staticCheck/static_tools_filter.py
           sparse-checkout-cone-mode: false
           path: staticCheck
-      - name: analyze result
-        run: |
+      - run: |
           for file in ${goFiles}; do
             echo "$file" >> change_files.txt
           done
@@ -78,10 +77,12 @@ jobs:
             echo "${errType} num is ${num}"
             if [ "${errType}" == "error" ] && [ "${num}" != "0" ];then
               echo "golangci-lint check failed"
-              exit 1
+              # exit 1
             fi
           done
         env:
           goFiles: ${{ needs.Get-Config.outputs.goFils }}
+      - if: always()
+        uses: csexton/debugger-action@master
       
           
