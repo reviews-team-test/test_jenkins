@@ -11,6 +11,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
         with:
+          repository: linuxdeepin/linglong-pica
           ref: 29ea5048a28a0a7b480f1face46519256247d255
           persist-credentials: false
       - name: Get Go Files
@@ -58,8 +59,6 @@ jobs:
           version: latest
           args: --timeout=20m --issues-exit-code=0 --out-format=junit-xml | tee golangci.xml
           only-new-issues: true
-      - if: always()
-        uses: csexton/debugger-action@master
       - name: Analyze Result
         uses: actions/checkout@v4
         with:
