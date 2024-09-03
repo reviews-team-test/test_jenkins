@@ -6,7 +6,6 @@ jobs:
   Get-Config:
     runs-on: ubuntu-latest
     outputs:
-      isGo: ${{ steps.get-check-flag.outputs.isGo }}
       goFils: ${{ steps.get-go-files.outputs.all_changed_files }}
     steps:
       - uses: actions/checkout@v3
@@ -21,15 +20,10 @@ jobs:
         with:
           files: |
             **.go
-      - name: get-check-flag
-        id: get-check-flag
-        run: |
-          if [ "${{steps.get-go-files.outputs.all_changed_files}}" ];then
-            echo "isGo=true" >> $GITHUB_OUTPUT
-          fi
   Call-GolangCiLint:
     needs: Get-Config
     runs-on: ubuntu-latest
+    if: needs.Get-Config.outputs.goFils != ''
     steps:
       - uses: actions/checkout@v3
         with:
@@ -82,7 +76,5 @@ jobs:
           done
         env:
           goFiles: ${{ needs.Get-Config.outputs.goFils }}
-      - if: always()
-        uses: csexton/debugger-action@master
       
           
