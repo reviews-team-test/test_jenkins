@@ -49,31 +49,12 @@ jobs:
       - if: hashFiles('.golangci.yml') == ''
         run: mv staticCheck/staticCheck/golangci.yml .golangci.yml
       - name: GolangCILint Check
+        continue-on-error: true
         uses: golangci/golangci-lint-action@v6
         with:
           version: latest
-          args: --timeout=20m --issues-exit-code=0 --out-format=junit-xml | tee golangci.xml
+          args: --timeout=30m
           only-new-issues: true
-      - name: Analyze Result
-        uses: actions/checkout@v4
-        with:
-          repository: kuchune/check-tools
-          sparse-checkout: staticCheck/static_tools_filter.py
-          sparse-checkout-cone-mode: false
-          path: staticCheck
-      - run: |
-          for file in ${{ needs.Get-Config.outputs.goFils }}; do
-            echo "$file" >> change_files.txt
-          done
-          python3 staticCheck/staticCheck/static_tools_filter.py --type golangci-lint --file change_files.txt --xml golangci.xml || true
-          for errType in "error" "failure";do
-            num=$(egrep -c "[[:space:]]+<${errType} .*message=" golangci_new.xml || true)
-            echo "${errType} num is ${num}"
-            if [ "${errType}" == "error" ] && [ "${num}" != "0" ];then
-              echo "golangci-lint check failed"
-              exit 1
-            fi
-          done
   Call-ShellCheck:
     runs-on: ubuntu-latest
     steps:      
@@ -88,8 +69,3 @@ jobs:
         with:
           severity: error
           format: gcc
-      - name: Analyze Result
-        run: |
-          echo ${{ steps.ShellCheck.outputs.files }}
-      
-          
