@@ -53,7 +53,7 @@ jobs:
         uses: golangci/golangci-lint-action@v6
         with:
           version: latest
-          args: --timeout=30m
+          args: --timeout=30m --out-format=junit-xml
           only-new-issues: true
   Call-ShellCheck:
     runs-on: ubuntu-latest
@@ -63,9 +63,8 @@ jobs:
           ref: 045f1a5608777d64266285a79368f7019b819a38
           persist-credentials: false
       - uses: pr-annotators/shellcheck-pr-annotator@main
-      - id: ShellCheck
+      - uses: ludeeus/action-shellcheck@master
         continue-on-error: true
-        uses: ludeeus/action-shellcheck@master
         with:
           severity: error
           format: gcc
