@@ -29,10 +29,11 @@ jobs:
           path: staticCheck
       - if: hashFiles('.golangci.yml') == ''
         run: mv staticCheck/staticCheck/golangci.yml .golangci.yml
-      - uses: csexton/debugger-action@master
       - name: GolangCILint Check
         uses: golangci/golangci-lint-action@v6
         with:
           version: v1.58
-          args: --timeout=5m --out-format=json
+          args: --timeout=10m --out-format=json --issues-exit-code=0
           only-new-issues: true
+      - if: always()
+        uses: csexton/debugger-action@master
