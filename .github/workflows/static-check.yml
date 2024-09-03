@@ -73,11 +73,11 @@ jobs:
           done
           python3 staticCheck/staticCheck/static_tools_filter.py --type golangci-lint --file change_files.txt --xml golangci.xml || true
           for errType in "error" "failure";do
-            num=$(egrep -c "[[:space:]]+<${errType} .*message=" golangci_new.xml)
+            num=$(egrep "[[:space:]]+<${errType} .*message=" golangci_new.xml | wc -l || true)
             echo "${errType} num is ${num}"
             if [ "${errType}" == "error" ] && [ "${num}" != "0" ];then
               echo "golangci-lint check failed"
-              # exit 1
+              exit 1
             fi
           done
         env:
