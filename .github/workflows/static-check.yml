@@ -33,7 +33,7 @@ jobs:
         uses: golangci/golangci-lint-action@v6
         with:
           version: latest
-          args: --timeout=10m --out-format=junit-xml
+          args: --timeout=10m --out-format=junit-xml | tee golangci.xml
           only-new-issues: true
       - if: always()
         uses: csexton/debugger-action@master
