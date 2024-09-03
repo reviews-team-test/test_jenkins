@@ -35,6 +35,7 @@ jobs:
           repository: linuxdeepin/linglong-pica
           ref: 29ea5048a28a0a7b480f1face46519256247d255
           persist-credentials: false
+          fetch-depth: 2
       - uses: actions/setup-go@v5
         with:
           go-version: stable
