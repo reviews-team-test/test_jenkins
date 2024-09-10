@@ -12,6 +12,7 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       isFail: ${{ steps.check-api.outputs.isFail }}
+      check_num: ${{ steps.check-api.outputs.check_num }}
     steps:
       - name: install tools
         run: |
@@ -82,6 +83,7 @@ jobs:
             check_num=$(cat api_check.txt | grep -c '\[Chg_exprort_fun\|\[Del_export_fun' || true)
             if [ $check_num -gt 0 ];then
               echo "isFail=true" >> $GITHUB_OUTPUT
+              echo "check_num=$check_num" >> $GITHUB_OUTPUT
               echo -e "${logMsgHead}${logMsg1}${resultInfoMsg}${logMsg2}" | tee comment.txt
               exit 1
             fi
@@ -93,21 +95,45 @@ jobs:
           name: api-check-comment
           path: comment.txt
   Post-Check:
-      runs-on: ubuntu-latest
-      needs: Check-Api-Change
-      continue-on-error: true
-      if: needs.Check-Api-Change.outputs.isFail == 'true' && failure()
-      steps:
-        - name: download artifact
-          uses: actions/download-artifact@v4
-          with:
-            name: api-check-comment
-        - name: Comment PR
-          uses: thollander/actions-comment-pull-request@v2
-          with:
-            filePath: comment.txt
-        - name: Add Reviewers to Pull Request
-          uses: ryaugusta/pr-add-reviewers-action@v1
-          with:
-            token: ${{ github.token }}
-            reviewers: ckux
+    runs-on: ubuntu-latest
+    needs: Check-Api-Change
+    continue-on-error: true
+    if: needs.Check-Api-Change.outputs.isFail == 'true' && failure()
+    steps:
+      - name: download artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: api-check-comment
+      - name: Comment PR
+        uses: thollander/actions-comment-pull-request@v2
+        with:
+          filePath: comment.txt
+      - name: Add Reviewers to Pull Request
+        uses: ryaugusta/pr-add-reviewers-action@v1
+        with:
+          token: ${{ github.token }}
+          reviewers: ckux
+  Send-Data:
+    runs-on: ubuntu-latest
+    needs: Check-Api-Change
+    continue-on-error: true
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          repository: kuchune/check-tools
+          sparse-checkout: |
+            common/sendData.py
+          sparse-checkout-cone-mode: false
+      - run: |
+          python3 sendData.py
+        env:
+          PROJECT: "${{github.repository}}"
+          BRANCH: "${{github.base_ref}}"
+          NUMBER: "${{github.event.pull_request.number}}"
+          AUTHOR: "${{github.event.pull_request.head.user.name}}"
+          REVISION: "${{github.event.pull_request.head.sha}}"
+          RUNID: "${{github.run_id}}"
+          JOBSTATUS: "${{job.status}}"
+          TESTTYPE: "apiCheck"
+          STATUS: ${{ needs.Check-Api-Change.outputs.isFail == 'true' && '否' || '是' }}
+          RESULT: ${{ needs.Check-Api-Change.outputs.check_num }}
