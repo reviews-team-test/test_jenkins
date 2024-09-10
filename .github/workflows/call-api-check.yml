@@ -126,7 +126,7 @@ jobs:
             common/sendData.py
           sparse-checkout-cone-mode: false
       - run: |
-          python3 sendData.py
+          python3 common/sendData.py
         env:
           PROJECT: "${{github.repository}}"
           BRANCH: "${{github.base_ref}}"
