@@ -131,7 +131,7 @@ jobs:
           PROJECT: "${{github.repository}}"
           BRANCH: "${{github.base_ref}}"
           NUMBER: "${{github.event.pull_request.number}}"
-          AUTHOR: "${{github.event.pull_request.head.user.name}}"
+          AUTHOR: "${{github.event.pull_request.head.user.login}}"
           REVISION: "${{github.event.pull_request.head.sha}}"
           RUNID: "${{github.run_id}}"
           JOBSTATUS: "${{job.status}}"
