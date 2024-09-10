@@ -77,7 +77,7 @@ jobs:
           '''
           resultInfoMsg=$(cat api_check.txt)
           detailUrl="https://github.com/reviews-team-test/infra-settings/blob/master/services/prow/config/jobs/images/api-check/readme.md"
-          logMsgHead="> [!WARNING]\n> [[API接口检查]](${detailUrl})\n- 检测到存在对外接口删除和修改;"
+          logMsgHead="> \[\!WARNING\]\n> [API接口检查]\n- 检测到存在对外接口删除和修改;"
           if [ -e 'api_check.txt' ];then
             check_num=$(cat api_check.txt | grep -c '\[Chg_exprort_fun\|\[Del_export_fun' || true)
             if [ $check_num -gt 0 ];then
