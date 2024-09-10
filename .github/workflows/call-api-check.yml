@@ -12,6 +12,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - id: api-check
+        continue-on-error: true
         uses: kuchune/ci-check-action@api-check
       - name: post check
         if: steps.api-check.outputs.isFail == 'true' && failure()
@@ -28,3 +29,5 @@ jobs:
           testtype: "apiCheck"
           status: ${{ steps.api-check.outputs.isFail == 'true' && '否' || '是' }}
           result: ${{ steps.api-check.outputs.isFail == 'true' && steps.api-check.outputs.check_num || '0' }}
+      - if: steps.api-check.outputs.isFail == 'true'
+        run: exit 1
