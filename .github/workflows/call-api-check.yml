@@ -27,4 +27,4 @@ jobs:
         with:
           testtype: "apiCheck"
           status: ${{ steps.api-check.outputs.isFail == 'true' && '否' || '是' }}
-          result: ${{ steps.api-check.outputs.check_num }}
+          result: ${{ steps.api-check.outputs.isFail == 'true' && steps.api-check.outputs.check_num || '0' }}
