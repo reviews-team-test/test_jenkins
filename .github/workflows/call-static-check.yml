@@ -14,8 +14,6 @@ jobs:
       - id: change-file-lang
         continue-on-error: true
         uses: kuchune/ci-check-action@change-file-lang
-        with:
-          repo_name: ${{ github.repository }}
       - if: always() && steps.change-file-lang.outputs.isGo == 'true'
         continue-on-error: true
         uses: kuchune/ci-check-action@golangci-lint-check

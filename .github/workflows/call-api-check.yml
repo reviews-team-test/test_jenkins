@@ -13,7 +13,6 @@ jobs:
     steps:
       - continue-on-error: true
         uses: kuchune/ci-check-action@api-check
-      - uses: csexton/debugger-action@master
       - if: always() && hashFiles('comment.txt')
         continue-on-error: true
         uses: kuchune/ci-check-action@post-check
