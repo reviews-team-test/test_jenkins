@@ -9,4 +9,29 @@ concurrency:
 
 jobs:
   static-check:
-    uses: ./.github/workflows/static-check.yml
+    runs-on: ubuntu-latest
+    steps:
+      - id: change-file-lang
+        continue-on-error: true
+        uses: kuchune/ci-check-action@change-file-lang
+        with:
+          repo_name: ${{ github.repository }}
+      - if: always() && steps.change-file-lang.outputs.isGo == 'true'
+        continue-on-error: true
+        uses: kuchune/ci-check-action@golangci-lint-check
+      - if: always() && steps.change-file-lang.outputs.isC == 'true'
+        continue-on-error: true
+        uses: linuxdeepin/action-cppcheck@main
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          repository: ${{ github.repository }}
+          pull_request_id: ${{ github.event.pull_request.number }}
+          allow_approve: false
+      - if: always() && steps.change-file-lang.outputs.isSh == 'true'
+        continue-on-error: true
+        uses: kuchune/ci-check-action@shell-check
+      - if: always()
+        continue-on-error: true
+        uses: kuchune/ci-check-action@dbusapi-check
+        with:
+          reviewers: ckux
