@@ -30,8 +30,8 @@ jobs:
         if: always()
         continue-on-error: true
         run: |
-          echo "summary-result="$goResult|$cppResult|$shellResult" >> $GITHUB_OUTPUT
-          echo "summary-status="[\"${goStatus}\",\"${cppStatus}\",\"${shellStatus}\"]" >> $GITHUB_OUTPUT
+          echo "summary-result=$goResult|$cppResult|$shellResult" >> $GITHUB_OUTPUT
+          echo "summary-status=[\"${goStatus}\",\"${cppStatus}\",\"${shellStatus}\"]" >> $GITHUB_OUTPUT
         env:
           goResult: ${{ steps.golangci-lint.outputs.errNum }}
           cppResult: ${{ steps.cppcheck.outputs.errNum }}
