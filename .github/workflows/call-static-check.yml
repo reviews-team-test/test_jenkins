@@ -14,20 +14,37 @@ jobs:
       - id: change-file-lang
         continue-on-error: true
         uses: reviews-team-test/ci-check-action@get-change-file-lang
-      - if: always() && steps.change-file-lang.outputs.isGo == 'true'
+      - id: golangci-lint
+        if: always() && steps.change-file-lang.outputs.isGo == 'true'
         continue-on-error: true
         uses: reviews-team-test/ci-check-action@golangci-lint
-      - if: always() && steps.change-file-lang.outputs.isC == 'true'
+      - id: cppcheck
+        if: always() && steps.change-file-lang.outputs.isC == 'true'
         continue-on-error: true
-        uses: linuxdeepin/action-cppcheck@main
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          repository: ${{ github.repository }}
-          pull_request_id: ${{ github.event.pull_request.number }}
-          allow_approve: false
-      - if: always() && steps.change-file-lang.outputs.isSh == 'true'
+        uses: reviews-team-test/ci-check-action@cpp-check
+      - id: shellcheck
+        if: always() && steps.change-file-lang.outputs.isSh == 'true'
         continue-on-error: true
         uses: reviews-team-test/ci-check-action@shell-check
+      - id: get-summary-result
+        if: always()
+        run: |
+          echo "summary-result="$goResult|$cppResult|$shellResult" >> $GITHUB_OUTPUT
+          echo "summary-status="[${goStatus},${cppStatus},${shellStatus}]" >> $GITHUB_OUTPUT
+        env:
+          goResult: ${{ steps.golangci-lint.outputs.errNum }}
+          cppResult: ${{ steps.cppcheck.outputs.errNum }}
+          shellResult: ${{ steps.shellcheck.outputs.errNum }}
+          goStatus: ${{ steps.golangci-lint.outputs.isFailed }}
+          cppStatus: ${{ steps.cppcheck.outputs.isFailed }}
+          shellStatus: ${{ steps.shellcheck.outputs.isFailed }}
+      - if: always()
+        continue-on-error: true
+        uses: reviews-team-test/ci-check-action@send-data
+        with:
+          testtype: "staticCheck"
+          status: ${{ contains(fromJSON(steps.get-summary-result.outputs.summary-status), 'true') && '否' || '是' }}
+          result: ${{ steps.get-summary-result.outputs.summary-result }}
       - if: always()
         continue-on-error: true
         uses: reviews-team-test/ci-check-action@dbusapi-check
