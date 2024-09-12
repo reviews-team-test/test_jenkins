@@ -13,7 +13,7 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  Check-Debian-Prefix:
+  debian-check:
     runs-on: ubuntu-latest
     steps:
       - continue-on-error: true
@@ -22,22 +22,22 @@ jobs:
           ref: ${{ github.event.pull_request.head.sha }}
       - if: always()
         continue-on-error: true
-        uses: kuchune/ci-check-action@debian-prefix-check
+        uses: reviews-team-test/ci-check-action@debian-prefix-check
       - if: always()
         continue-on-error: true
-        uses: kuchune/ci-check-action@debian-version-check
+        uses: reviews-team-test/ci-check-action@debian-version-check
       - if: always()
         continue-on-error: true
-        uses: kuchune/ci-check-action@debian-keys-check
+        uses: reviews-team-test/ci-check-action@debian-keys-check
       - if: always() && hashFiles('comment.txt')
         continue-on-error: true
-        uses: kuchune/ci-check-action@post-check
+        uses: reviews-team-test/ci-check-action@post-check
         with:
           comment-file: comment.txt
           reviewers: ckux
       - if: always()
         continue-on-error: true
-        uses: kuchune/ci-check-action@send-data
+        uses: reviews-team-test/ci-check-action@send-data
         with:
           testtype: "debianCheck"
           status: ${{ hashFiles('comment.txt') && '否' || '是' }}
