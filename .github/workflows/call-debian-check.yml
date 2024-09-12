@@ -15,13 +15,6 @@ concurrency:
 jobs:
   Check-Debian-Prefix:
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        include:
-          - check_type: modify
-            check_keys: "getcap,setcap,lshw,dmidecode"
-          - check_type: all
-            check_keys: "export,unset"
     steps:
       - continue-on-error: true
         uses: actions/checkout@v4
@@ -36,9 +29,6 @@ jobs:
       - if: always()
         continue-on-error: true
         uses: kuchune/ci-check-action@debian-keys-check
-        with:
-          check_type: ${{ matrix.check_type }}
-          check_keys: ${{ matrix.check_keys }}
       - if: always() && hashFiles('comment.txt')
         continue-on-error: true
         uses: kuchune/ci-check-action@post-check
